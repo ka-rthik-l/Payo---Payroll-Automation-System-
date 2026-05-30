@@ -459,7 +459,7 @@ export const payrollRunPage = {
 
         <!-- Terminal screen console -->
         <div class="smtp-log-console" id="smtp-log-console">
-          <div class="smtp-log-line system">[SMTP QUEUE STARTED] Initializing connection to smtp.payo.co:587...</div>
+          <div class="smtp-log-line system" id="smtp-init-log-line">[SMTP QUEUE STARTED] Initializing connection to mail server...</div>
         </div>
       </div>
     `;
@@ -820,6 +820,15 @@ export const payrollRunPage = {
   },
 
   _bindStep6() {
+    // Patch the initial log line with the live SMTP host from Settings
+    settingsService.getSettings().then((settings) => {
+      const initLine = document.getElementById('smtp-init-log-line');
+      if (initLine && settings?.smtpServer) {
+        initLine.textContent = `[SMTP QUEUE STARTED] Initializing connection to ${settings.smtpServer}:${settings.smtpPort || 587}...`;
+      }
+    }).catch(() => {
+      // Settings fetch failed — leave the generic placeholder as-is
+    });
     // Automatically trigger SMTP dispatches
     this._runSmtpDispatches();
   },
