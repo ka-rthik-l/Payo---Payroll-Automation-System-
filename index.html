@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payo | Automate Payroll Operations</title>
+  <meta name="description" content="Payo is an enterprise-grade Payroll Operations Platform that automates salary processing, payslip generation, and employee payroll communication.">
+  
+  <!-- Premium Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styling Sheets -->
+  <link rel="stylesheet" href="./src/styles/variables.css">
+  <link rel="stylesheet" href="./src/styles/layout.css">
+  <link rel="stylesheet" href="./src/styles/components.css">
+  <link rel="stylesheet" href="./src/styles/pages.css">
+
+  <style>
+    /* Inline helper for responsive sidebar toggle on mobile viewports */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--neutral-600);
+      cursor: pointer;
+      padding: var(--spacing-2);
+      border-radius: var(--radius-md);
+      transition: background-color var(--transition-fast);
+    }
+    .mobile-menu-btn:hover {
+      background-color: var(--neutral-100);
+      color: var(--neutral-800);
+    }
+    @media (max-width: 1024px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Root Layout Grid -->
+  <div class="app-container">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+    
+    <!-- Sticky Sidebar Roster Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-wrapper">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo-icon">P</div>
+          <div class="sidebar-logo-text">
+            <span>Payo</span>
+            <span class="sidebar-tagline">Automate Payroll</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-menu">
+          <!-- Link 1: Dashboard -->
+          <a class="sidebar-link active" data-route="dashboard">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Dashboard
+          </a>
+
+          <!-- Link 2: Employees Directory -->
+          <a class="sidebar-link" data-route="employees">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            Employees
+          </a>
+
+          <!-- Link 3: Payroll Run Center -->
+          <a class="sidebar-link" data-route="payroll">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Payroll Run Center
+          </a>
+
+          <!-- Link 4: Payslips -->
+          <a class="sidebar-link" data-route="payslips">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Payslips
+          </a>
+
+          <!-- Link 5: Email Center -->
+          <a class="sidebar-link" data-route="emails">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Email Center
+          </a>
+
+          <!-- Link 6: Settings -->
+          <a class="sidebar-link" data-route="settings">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings
+          </a>
+        </nav>
+      </div>
+
+      <!-- User profiles bottom container -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">KE</div>
+          <div class="user-details">
+            <span class="user-name">Karthik Evaluator</span>
+            <span class="user-role">HR Coordinator</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="content-wrapper">
+      
+      <!-- Sticky Glassmorphic Header -->
+      <header class="header">
+        <div class="header-left">
+          <!-- Mobile Menu trigger -->
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+
+          <!-- Breadcrumbs Router Path -->
+          <nav class="breadcrumbs" id="breadcrumb-list">
+            <a href="#" class="breadcrumb-item">Payo</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">Dashboard</span>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <span class="badge-period" id="header-active-period">May 2026</span>
+        </div>
+      </header>
+
+      <!-- Main viewport area -->
+      <main class="main-content" id="main-view">
+        <!-- Render page elements dynamically -->
+      </main>
+      
+    </div>
+  </div>
+
+  <!-- Reusable Form and Details slide drawer overlay -->
+  <div class="drawer-overlay" id="drawer-overlay">
+    <div class="drawer">
+      <div class="drawer-header">
+        <h2 class="drawer-title" id="drawer-title-header">Details Panel</h2>
+        <button class="drawer-close" aria-label="Close panel">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <div class="drawer-body">
+        <!-- Body elements load here -->
+      </div>
+      <div class="drawer-footer">
+        <!-- Footer actions load here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Toast messages stack -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Router entry point -->
+  <script>window.PAYO_API_URL = window.PAYO_API_URL || 'http://localhost:3000/api';</script>
+  <script type="module" src="./src/js/app.js"></script>
+</body>
+</html>

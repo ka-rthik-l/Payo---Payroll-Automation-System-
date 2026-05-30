@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  USD
+  INR
+}
+
+enum PayrollRunStatus {
+  draft
+  validated
+  completed
+  emails_sent
+}
+
+enum UploadFileType {
+  employees
+  salaries
+}
+
+enum EmailStatus {
+  queued
+  sending
+  delivered
+  failed
+}
+
+enum StagingType {
+  employees
+  salaries
+}
+
+model Settings {
+  id                Int      @id @default(1)
+  companyName       String
+  address           String   @db.Text
+  taxId             String
+  emailSender       String
+  smtpHost          String
+  smtpPort          Int      @default(587)
+  currency          Currency @default(USD)
+  activePeriodMonth String
+  activePeriodYear  String
+  updatedAt         DateTime @updatedAt
+}
+
+model Employee {
+  id         String     @id
+  name       String
+  email      String     @unique
+  department String     @default("General")
+  role       String     @default("Associate")
+  birthYear  Int?
+  createdAt  DateTime   @default(now())
+  payslips   Payslip[]
+  emailLogs  EmailLog[]
+}
+
+model PayrollRun {
+  id               String           @id
+  month            String
+  year             String
+  status           PayrollRunStatus @default(draft)
+  dateProcessed    DateTime?
+  employeesCount   Int              @default(0)
+  totalGross       Decimal          @default(0) @db.Decimal(12, 2)
+  totalDeductions  Decimal          @default(0) @db.Decimal(12, 2)
+  totalNet         Decimal          @default(0) @db.Decimal(12, 2)
+  emailsSent       Int              @default(0)
+  emailsFailed     Int              @default(0)
+  generatedBy      String?
+  employeeUploadId String?
+  salaryUploadId   String?
+  createdAt        DateTime         @default(now())
+
+  payslips   Payslip[]
+  emailLogs  EmailLog[]
+  staging    PayrollRunStaging[]
+  uploads    UploadFile[]
+
+  @@unique([month, year])
+}
+
+model PayrollRunStaging {
+  id        String      @id @default(cuid())
+  runId     String
+  type      StagingType
+  payload   Json
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  run PayrollRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, type])
+}
+
+model Payslip {
+  id           String   @id
+  runId        String
+  employeeId   String
+  employeeName String
+  month        String
+  year         String
+  baseSalary   Decimal  @db.Decimal(12, 2)
+  hra          Decimal  @db.Decimal(12, 2)
+  allowances   Decimal  @db.Decimal(12, 2)
+  deductions   Decimal  @db.Decimal(12, 2)
+  netSalary    Decimal  @db.Decimal(12, 2)
+
+  run      PayrollRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  employee Employee   @relation(fields: [employeeId], references: [id])
+
+  @@index([month])
+  @@index([runId])
+}
+
+model EmailLog {
+  id            String      @id
+  runId         String
+  employeeId    String
+  employeeName  String
+  recipient     String
+  subject       String
+  status        EmailStatus @default(queued)
+  attempts      Int         @default(0)
+  lastAttemptAt DateTime?
+  errorMessage  String?     @db.Text
+
+  run      PayrollRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  employee Employee   @relation(fields: [employeeId], references: [id])
+
+  @@index([status])
+  @@index([runId])
+}
+
+model UploadFile {
+  id           String         @id @default(cuid())
+  type         UploadFileType
+  originalName String
+  mimeType     String
+  storagePath  String
+  rowCount     Int
+  runId        String?
+  uploadedAt   DateTime       @default(now())
+  uploadedBy   String?
+
+  run PayrollRun? @relation(fields: [runId], references: [id], onDelete: SetNull)
+}

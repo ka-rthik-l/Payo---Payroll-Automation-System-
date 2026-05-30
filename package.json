@@ -1,0 +1,17 @@
+{
+  "name": "payo-payroll",
+  "version": "1.0.0",
+  "description": "Payo - Payroll Operations Platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve -l 5173",
+    "start": "npx -y serve -l 5173"
+  },
+  "keywords": [
+    "payroll",
+    "saas",
+    "operations"
+  ],
+  "author": "Payo Dev Team",
+  "license": "ISC"
+}
