@@ -196,6 +196,14 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 
     const { buffer, filename } = await pdfService.generatePayslipPdfBuffer(payslip.id);
 
+    console.log('Calling sendMail...', {
+      from: settings.emailSender,
+      to: log.recipient,
+      subject,
+      host: transporter.options?.host || process.env.SMTP_HOST || settings.smtpHost,
+      port: transporter.options?.port || Number(process.env.SMTP_PORT || settings.smtpPort || 587)
+    });
+
     await transporter.sendMail({
       from: settings.emailSender,
       to: log.recipient,
@@ -211,6 +219,8 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
       ]
     });
 
+    console.log('Email success:', log.recipient);
+
     const delivered = await prisma.emailLog.update({
       where: { id: log.id },
       data: {
@@ -222,6 +232,7 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 
     return formatEmailLog(delivered);
   } catch (err) {
+    console.error('Email failure:', err);
     const failed = await prisma.emailLog.update({
       where: { id: log.id },
       data: {
@@ -238,15 +249,31 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 function createTransporter(settings) {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
+  const host = process.env.SMTP_HOST || settings.smtpHost;
+  const port = Number(process.env.SMTP_PORT || settings.smtpPort || 587);
+  const secure = process.env.SMTP_SECURE === 'true';
   const isProduction = process.env.NODE_ENV === 'production';
 
+  console.log('SMTP HOST:', host);
+  console.log('SMTP PORT:', port);
+  console.log('SMTP USER:', user);
+  console.log('Creating transporter...');
+
   if (user && pass) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST || settings.smtpHost,
-      port: Number(process.env.SMTP_PORT || settings.smtpPort || 587),
-      secure: process.env.SMTP_SECURE === 'true',
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure,
       auth: { user, pass }
     });
+
+    if (typeof transporter.verify === 'function') {
+      console.log('Transporter verify exists.');
+    } else {
+      console.log('Transporter verify does not exist.');
+    }
+
+    return transporter;
   }
 
   if (isProduction) {
