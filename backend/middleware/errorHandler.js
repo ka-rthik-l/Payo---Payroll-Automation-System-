@@ -16,6 +16,23 @@ export function errorHandler(err, req, res, next) {
     });
   }
 
+  // Always log Prisma errors to Railway console regardless of NODE_ENV
+  if (err.code && String(err.code).startsWith('P')) {
+    console.error('[PRISMA ENGINE ERROR]', {
+      code: err.code,
+      message: err.message,
+      meta: err.meta,
+      stack: err.stack
+    });
+    return res.status(500).json({
+      success: false,
+      error: err.code,
+      // TEMP DIAGNOSTIC: always expose raw Prisma message — remove after debugging
+      message: err.message,
+      meta: err.meta || null
+    });
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     console.error(err);
   }
