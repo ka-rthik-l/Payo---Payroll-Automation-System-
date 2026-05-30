@@ -824,7 +824,7 @@ export const payrollRunPage = {
     settingsService.getSettings().then((settings) => {
       const initLine = document.getElementById('smtp-init-log-line');
       if (initLine && settings?.smtpServer) {
-        initLine.textContent = `[SMTP QUEUE STARTED] Initializing connection to ${settings.smtpServer}:${settings.smtpPort || 587}...`;
+        initLine.textContent = `[SMTP QUEUE STARTED] Initializing connection to ${settings.smtpServer}:${settings.smtpPort}...`;
       }
     }).catch(() => {
       // Settings fetch failed — leave the generic placeholder as-is

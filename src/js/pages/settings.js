@@ -49,6 +49,16 @@ export const settingsPage = {
                     <label class="form-label">SMTP Sender Address</label>
                     <input type="email" class="form-control" name="emailSender" value="${settings.emailSender || ''}" required>
                   </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label">SMTP Server</label>
+                      <input type="text" class="form-control" name="smtpServer" value="${settings.smtpServer || ''}" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">SMTP Port</label>
+                      <input type="number" class="form-control" name="smtpPort" min="1" max="65535" value="${settings.smtpPort || ''}" required>
+                    </div>
+                  </div>
                   <button class="btn btn-primary" type="submit" style="align-self:flex-start; margin-top:var(--spacing-2);">Save Profile Configuration</button>
                 </form>
               </div>

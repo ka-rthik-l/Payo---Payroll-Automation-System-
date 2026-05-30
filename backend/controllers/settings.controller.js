@@ -8,15 +8,19 @@ export const settingsController = {
   },
 
   async updateCompany(req, res) {
-    const { companyName, address, taxId, emailSender } = req.body;
-    if (!companyName || !address || !taxId || !emailSender) {
-      throw new AppError('companyName, address, taxId, and emailSender are required.', 400, 'VALIDATION_ERROR');
+    const { companyName, address, taxId, emailSender, smtpServer, smtpPort } = req.body;
+    if (!companyName || !address || !taxId || !emailSender || !smtpServer) {
+      throw new AppError('companyName, address, taxId, emailSender, and smtpServer are required.', 400, 'VALIDATION_ERROR');
     }
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(emailSender)) {
       throw new AppError('emailSender must be a valid email address.', 400, 'VALIDATION_ERROR');
     }
-    const settings = await settingsService.updateCompany({ companyName, address, taxId, emailSender });
+    const parsedPort = Number(smtpPort);
+    if (isNaN(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
+      throw new AppError('smtpPort must be a valid number between 1 and 65535.', 400, 'VALIDATION_ERROR');
+    }
+    const settings = await settingsService.updateCompany({ companyName, address, taxId, emailSender, smtpServer, smtpPort: parsedPort });
     res.json({ success: true, data: settings });
   },
 
