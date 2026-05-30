@@ -13,6 +13,11 @@ export const payrollController = {
     res.json({ success: true, data });
   },
 
+  async deleteRun(req, res) {
+    const data = await payrollRunService.deleteRun(req.params.id);
+    res.json({ success: true, data });
+  },
+
   async uploadEmployees(req, res) {
     const data = await payrollRunService.uploadEmployees(
       req.params.id,

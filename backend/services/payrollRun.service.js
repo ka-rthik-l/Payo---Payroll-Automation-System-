@@ -108,6 +108,25 @@ export const payrollRunService = {
     return runs.map(formatRun);
   },
 
+  async deleteRun(runId) {
+    const run = await prisma.payrollRun.findUnique({ where: { id: runId } });
+    if (!run) {
+      throw new AppError(`Payroll run ${runId} not found.`, 404, 'RUN_NOT_FOUND');
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // Delete dependent child records first to preserve referential integrity.
+      await tx.emailLog.deleteMany({ where: { runId } });
+      await tx.payslip.deleteMany({ where: { runId } });
+      await tx.payrollRunStaging.deleteMany({ where: { runId } });
+      // UploadFile uses onDelete: SetNull, so remove any uploads explicitly for this run.
+      await tx.uploadFile.deleteMany({ where: { runId } });
+      await tx.payrollRun.delete({ where: { id: runId } });
+    });
+
+    return { id: runId };
+  },
+
   async finalizeRun(runId, generatedBy) {
     const run = await prisma.payrollRun.findUnique({ where: { id: runId } });
 

@@ -8,6 +8,7 @@ const router = Router();
 router.post('/runs/current', asyncHandler(payrollController.getOrCreateCurrentRun));
 router.get('/runs', asyncHandler(payrollController.listRuns));
 router.get('/runs/:id', asyncHandler(payrollController.getRunById));
+router.delete('/runs/:id', asyncHandler(payrollController.deleteRun));
 router.post(
   '/runs/:id/upload/employees',
   uploadEmployees,

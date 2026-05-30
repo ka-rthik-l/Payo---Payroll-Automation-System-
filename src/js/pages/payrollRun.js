@@ -102,9 +102,12 @@ export const payrollRunPage = {
 
     return `
       <div>
-        <div style="margin-bottom: var(--spacing-6);">
-          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Payroll Run Center</h1>
-          <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Execute ${periodLabel} batch salary processing</p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:var(--spacing-4); margin-bottom: var(--spacing-6);">
+          <div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Payroll Run Center</h1>
+            <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Execute ${periodLabel} batch salary processing</p>
+          </div>
+          <button class="btn btn-danger btn-sm" id="delete-run-btn" type="button">Delete Run</button>
         </div>
 
         <div class="run-center-grid">
@@ -521,6 +524,11 @@ export const payrollRunPage = {
      INTERACTIONS & BINDINGS (afterRender)
      ========================================================================== */
   afterRender() {
+    const deleteBtn = document.getElementById('delete-run-btn');
+    if (deleteBtn) {
+      deleteBtn.onclick = () => this._handleDeleteRun();
+    }
+
     const currentStep = state.activeRunStep;
 
     switch (currentStep) {
@@ -545,6 +553,42 @@ export const payrollRunPage = {
       case 7:
         this._bindStep7();
         break;
+    }
+  },
+
+  async _handleDeleteRun() {
+    const runId = state.currentRunData.runId;
+    if (!runId) {
+      toast.error('Delete Failed', 'No active payroll run is available for deletion.');
+      return;
+    }
+
+    const confirmed = confirm(
+      'Delete this payroll run?\n\nThis will permanently remove:\n- Payslips\n- Email Logs\n- Validation Data\n- Upload Records\n\nEmployees and Settings will NOT be affected.'
+    );
+    if (!confirmed) return;
+
+    try {
+      await payrollService.deleteRun(runId);
+      sessionStorage.removeItem('payo_run_id');
+      state.patchRunData({
+        runId: null,
+        runMeta: null,
+        employeeFile: null,
+        salaryFile: null,
+        parsedEmployees: [],
+        parsedSalaries: [],
+        validationReport: [],
+        calculatedPayroll: [],
+        generatedPayslips: [],
+        emailQueue: [],
+        emailsFailed: 0
+      });
+      state.setRunStep(1);
+      toast.success('Payroll Run Deleted', `Payroll run ${runId} was removed. A new run will be initialized for the active period.`);
+      await this.refresh();
+    } catch (err) {
+      toast.error('Delete Failed', err.message);
     }
   },
 

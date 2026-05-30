@@ -63,6 +63,11 @@ EMP005,9000,2200,1100,1000`;
     return res.data;
   },
 
+  async deleteRun(runId) {
+    const res = await apiClient.delete(`/payroll/runs/${runId}`);
+    return res.data;
+  },
+
   async getPayrollRuns() {
     const res = await apiClient.get('/payroll/runs');
     return res.data;
