@@ -16,5 +16,6 @@ router.use('/employees', employeesRoutes);
 router.use('/payroll', payrollRoutes);
 router.use('/payslips', payslipsRoutes);
 router.use('/emails', emailsRoutes);
+router.use('/email', emailsRoutes); // Alias to meet exact endpoint requirement
 
 export default router;

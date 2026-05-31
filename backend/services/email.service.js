@@ -150,6 +150,26 @@ export const emailService = {
     }
 
     return result;
+  },
+
+  async testConnection() {
+    const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+    if (!settings) {
+      throw new AppError('Settings not found.', 404, 'SETTINGS_NOT_FOUND');
+    }
+
+    const transporter = createTransporter(settings);
+
+    if (typeof transporter.verify !== 'function') {
+      return { success: false, message: 'transporter.verify is not a function (likely a mock transporter in dev)' };
+    }
+
+    try {
+      await transporter.verify();
+      return { success: true };
+    } catch (err) {
+      return { success: false, code: err.code, message: err.message };
+    }
   }
 };
 
@@ -254,9 +274,12 @@ function createTransporter(settings) {
   const secure = process.env.SMTP_SECURE === 'true';
   const isProduction = process.env.NODE_ENV === 'production';
 
+  console.log('--- SMTP CONFIG DIAGNOSTICS ---');
   console.log('SMTP HOST:', host);
   console.log('SMTP PORT:', port);
-  console.log('SMTP USER:', user);
+  console.log('SMTP SECURE:', secure);
+  console.log('SMTP USER EXISTS:', !!user);
+  console.log('SMTP PASS EXISTS:', !!pass);
   console.log('Creating transporter...');
 
   if (user && pass) {
@@ -266,6 +289,8 @@ function createTransporter(settings) {
       secure,
       auth: { user, pass }
     });
+
+    console.log('Transporter options after createTransport():', JSON.stringify(transporter.options, null, 2));
 
     if (typeof transporter.verify === 'function') {
       console.log('Transporter verify exists.');

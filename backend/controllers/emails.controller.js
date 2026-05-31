@@ -21,5 +21,18 @@ export const emailsController = {
   async retryOne(req, res) {
     const data = await emailService.retryEmailById(req.params.id);
     res.json({ success: true, data });
+  },
+
+  async testConnection(req, res) {
+    const result = await emailService.testConnection();
+    if (result.success) {
+      return res.json({ success: true });
+    } else {
+      return res.json({
+        success: false,
+        code: result.code,
+        message: result.message
+      });
+    }
   }
 };
