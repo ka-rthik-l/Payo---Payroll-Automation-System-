@@ -34,7 +34,7 @@ Payo is a robust, self-contained, and feature-complete **Automated Payroll Opera
 
 The operational cycle of corporate payroll is highly prone to human error and data mismatches. **Payo** addresses these concerns by decoupling data collection, validation, and finalization through a structured staging architecture. 
 
-Managers upload payroll files (Employees directory and Salary spreadsheets), view validation anomalies in real-time, preview generated financials, and execute payroll finalization with a single click. Upon finalization, the system generates secure PDF statements, queues them for transmission, and dispatches them via SMTP with built-in delivery logging and failure recovery mechanisms.
+Managers upload payroll files (Employees directory and Salary spreadsheets), view validation anomalies in real-time, preview generated financials, and execute payroll finalization with a single click. Upon finalization, the system generates secure PDF statements, queues them for transmission, and dispatches them through SendGrid with built-in delivery logging and failure recovery mechanisms.
 
 ---
 
@@ -46,7 +46,7 @@ Managers upload payroll files (Employees directory and Salary spreadsheets), vie
     *   **Step 3:** Automated Schema & Cross-Reference Validation.
     *   **Step 4:** Ledger Preview (Gross, Deductions, and Net Take-home calculation checks).
     *   **Step 5:** Payslips Compilation (generates secure database registry entries).
-    *   **Step 6:** Outbound SMTP processing (background batch sending).
+    *   **Step 6:** Outbound email processing via SendGrid (background batch sending).
     *   **Step 7:** Completed status review with metrics.
 *   **Intelligent File Parser:** Native parsing of CSV and Excel (`.xlsx`) files supporting standard corporate spreadsheets.
 *   **Dual-Layer Data Validation:** Matches employee lists with salary items, validating emails, structure syntax, avoiding negative salaries, and flagging missing/duplicate entries.
@@ -82,7 +82,7 @@ graph TD
         
         H -->|Upload Parsing| J[csv-parser / xlsx]
         H -->|PDF Generation| K[pdfkit]
-        H -->|SMTP Dispatch| L[nodemailer]
+        H -->|SendGrid Dispatch| L[sendgrid]
     end
 
     subgraph Database [Storage Layer]
@@ -114,7 +114,7 @@ To prevent corrupting the production database with malformed files, Payo uses a 
 ### Backend
 *   **Express.js (v5):** High-performance routing framework using ES modules natively.
 *   **Prisma Client:** Type-safe database queries and schema management.
-*   **Nodemailer:** Custom SMTP integration, HTML bodies, and binary attachments.
+*   **SendGrid:** Secure SendGrid HTTP API integration, HTML bodies, and binary attachments.
 *   **PDFKit:** Standard document creation engine.
 *   **Multer:** Configured to handle multi-part file uploads safely.
 *   **ExcelJS / XLSX / CSV-Parser:** Parsing tools supporting both common flat-files and Excel sheets.
@@ -164,7 +164,7 @@ Payo/
     ├── routes/             # API routing matching REST specs
     ├── services/           # Underlying business logic engines
     │   ├── fileParser.service.js   # CSV/XLSX parser engine
-    │   ├── email.service.js        # Mail queues, SMTP, HTML templates
+    │   ├── email.service.js        # Mail queues, SendGrid integration, HTML templates
     │   ├── pdf.service.js          # PDF buffer builder coordinator
     │   ├── pdf/
     │   │   └── payslipPdf.generator.js # Layout styling and text drawings via pdfkit
@@ -186,12 +186,9 @@ PORT=3000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 
-# SMTP Credentials — Used by Nodemailer (not stored in database for security)
-SMTP_HOST=smtp.payo.co
-SMTP_PORT=587
-SMTP_USER=your_smtp_username
-SMTP_PASS=your_smtp_password
-SMTP_SECURE=false
+# SendGrid Credentials — Used by the backend (not stored in database for security)
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_SENDER_EMAIL=payroll@payo.co
 
 # Upload configurations
 UPLOAD_MAX_SIZE_MB=5
@@ -298,12 +295,12 @@ The user interface should now be accessible at `http://localhost:5173`.
 [Process Email Queue]
        ├─► Compile PDF payslip Buffer via pdfkit
        ├─► Build HTML body with inline CSS styles
-       ├─► Dispatch via Transporter (SMTP)
+       ├─► Dispatch via SendGrid transport
        └─► Update log state ('delivered' / 'failed')
 ```
 
-### SMTP Configuration and Fail-safe Mechanism
-*   **Nodemailer Transporter:** Sourced securely through your server's `.env` parameters. If running in a development context without SMTP credentials, NodeMailer prints a mock statement containing recipient metadata to the server stdout logs instead.
+### SendGrid Configuration and Fail-safe Mechanism
+*   **SendGrid API:** Sourced securely through your server's `.env` parameters. If running in a development context without a SendGrid API key, the system prints a mock email delivery statement containing recipient metadata to the server stdout logs instead.
 *   **Interrupted Send Recovery:** The background dispatcher automatically recovers any stuck tasks flagged as `sending` if they have exceeded five minutes (e.g., due to a server crash or timeout) and resets them to `failed`.
 *   **Targeted Retry:** The Email Center page features instant retry actions allowing users to attempt individual redeliveries or dispatch the entire queue of failed records in a single click.
 
@@ -348,7 +345,7 @@ PDF slips are generated using `pdfkit` on the fly to avoid wasting local storage
 ### Backend Production Build
 1.  Ensure `NODE_ENV` is set to `production` in your hosting manager.
 2.  Provide database hosting values (e.g., Amazon RDS, DigitalOcean Managed Database) in `DATABASE_URL`.
-3.  Expose the environment variables `SMTP_USER` and `SMTP_PASS` on the deployment platform.
+3.  Expose the environment variables `SENDGRID_API_KEY` and `SENDGRID_SENDER_EMAIL` on the deployment platform.
 4.  Start server using `npm start`.
 
 ### Frontend Production Build

@@ -252,7 +252,7 @@
 }
 
 /* Sending Queue Log Board */
-.smtp-log-console {
+.email-log-console {
   width: 100%;
   background-color: var(--neutral-900);
   color: #a7f3d0; /* Mint color monospace */
@@ -266,13 +266,13 @@
   line-height: 1.6;
 }
 
-.smtp-log-line {
+.email-log-line {
   margin-bottom: var(--spacing-1);
 }
 
-.smtp-log-line.system { color: var(--neutral-400); }
-.smtp-log-line.error { color: var(--danger-400); }
-.smtp-log-line.success { color: var(--success-400); }
+.email-log-line.system { color: var(--neutral-400); }
+.email-log-line.error { color: var(--danger-400); }
+.email-log-line.success { color: var(--success-400); }
 
 /* Activity Timeline Widget */
 .timeline {
@@ -716,5 +716,57 @@
     padding-left: 0 !important;
     border-top: 1px solid var(--neutral-200);
     padding-top: var(--spacing-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .run-center-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wizard-card {
+    min-height: auto;
+  }
+
+  .wizard-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+  }
+
+  .upload-dropzone {
+    padding: var(--spacing-8) var(--spacing-4);
+  }
+
+  .email-log-console {
+    max-height: 320px;
+  }
+
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .email-delivery-summary,
+  .payslip-details-grid,
+  .payslip-financial-split {
+    grid-template-columns: 1fr;
+  }
+
+  .payslip-corporate-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+
+  .payslip-net-highlight-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+
+  .payslip-signature-area {
+    flex-direction: column;
+    gap: var(--spacing-4);
   }
 }

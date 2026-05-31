@@ -193,6 +193,10 @@
 }
 
 @media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
   .table-scroll .data-table {
     min-width: 640px;
   }
@@ -204,6 +208,17 @@
 
   .table-search-wrapper {
     max-width: none;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+  }
+
+  .drawer-footer {
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 }
 

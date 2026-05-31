@@ -17,9 +17,7 @@ export const settingsService = {
         companyName: data.companyName,
         address: data.address,
         taxId: data.taxId,
-        emailSender: data.emailSender,
-        smtpHost: data.smtpServer,
-        smtpPort: data.smtpPort
+        emailSender: data.emailSender
       }
     });
     return formatSettings(settings);
@@ -44,8 +42,6 @@ function formatSettings(settings) {
     address: settings.address,
     taxId: settings.taxId,
     emailSender: settings.emailSender,
-    smtpServer: settings.smtpHost,
-    smtpPort: settings.smtpPort,
     currency: settings.currency,
     activePeriodMonth: settings.activePeriodMonth,
     activePeriodYear: settings.activePeriodYear

@@ -21,7 +21,7 @@ export const emailService = {
       if (onLogUpdate) {
         onLogUpdate(
           log,
-          `Connecting to SMTP Server... Sending mail to ${log.recipient}`,
+          `Sending email to ${log.recipient}`,
           'system'
         );
       }
@@ -43,7 +43,7 @@ export const emailService = {
       } else {
         onLogUpdate(
           log,
-          `Connecting to SMTP Server... Sending mail to ${log.recipient}`,
+          `Sending email to ${log.recipient}`,
           'system'
         );
       }

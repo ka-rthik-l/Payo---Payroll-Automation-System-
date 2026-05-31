@@ -46,18 +46,16 @@ export const settingsPage = {
                     <input type="text" class="form-control" name="taxId" value="${settings.taxId || ''}" required>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">SMTP Sender Address</label>
+                    <label class="form-label">Sender Email</label>
                     <input type="email" class="form-control" name="emailSender" value="${settings.emailSender || ''}" required>
                   </div>
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label">SMTP Server</label>
-                      <input type="text" class="form-control" name="smtpServer" value="${settings.smtpServer || ''}" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label">SMTP Port</label>
-                      <input type="number" class="form-control" name="smtpPort" min="1" max="65535" value="${settings.smtpPort || ''}" required>
-                    </div>
+                  <div class="form-group" style="background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
+                    <label class="form-label">Email Provider</label>
+                    <input type="text" class="form-control" value="SendGrid" readonly>
+                  </div>
+                  <div class="form-group" style="background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
+                    <label class="form-label">Delivery Method</label>
+                    <input type="text" class="form-control" value="HTTPS API" readonly>
                   </div>
                   <button class="btn btn-primary" type="submit" style="align-self:flex-start; margin-top:var(--spacing-2);">Save Profile Configuration</button>
                 </form>

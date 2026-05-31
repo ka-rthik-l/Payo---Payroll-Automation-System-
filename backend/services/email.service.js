@@ -225,7 +225,7 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 
   try {
     if (shouldSimulateFailure(log, attempts)) {
-      throw new Error('SMTP Connection Timeout: Failed to deliver payslip.');
+      throw new Error('Email service timeout: Failed to deliver payslip.');
     }
 
     const payslip = await pdfService.findPayslipForEmail(log.runId, log.employeeId);

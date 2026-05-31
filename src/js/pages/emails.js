@@ -166,10 +166,10 @@ export const emailsPage = {
         try {
           // Trigger email retry
           await emailService.retryEmailById(id);
-          toast.success('Email Delivered', `Successfully completed SMTP handshake. Slip dispatched to recipient.`);
+          toast.success('Email Delivered', `Successfully delivered the payslip to the recipient.`);
           this.refresh();
         } catch (err) {
-          toast.error('SMTP Connection Failed', err.message);
+          toast.error('Email Delivery Failed', err.message);
           this.refresh();
         }
       };
@@ -184,10 +184,10 @@ export const emailsPage = {
         
         try {
           const res = await emailService.retryFailedEmails();
-          toast.success('SMTP Batch Retried', `Successfully dispatched ${res.retriedSuccess} pending notifications.`);
+          toast.success('Email Batch Retried', `Successfully dispatched ${res.retriedSuccess} pending notifications.`);
           this.refresh();
         } catch (err) {
-          toast.error('SMTP Batch Failed', err.message);
+          toast.error('Email Batch Failed', err.message);
           this.refresh();
         }
       };

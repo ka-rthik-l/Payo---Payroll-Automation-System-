@@ -160,7 +160,7 @@ class App {
         'Verify Schema',
         'Ledger Preview',
         'Compile Slips',
-        'Outbound SMTP',
+        'Email Dispatch',
         'Complete'
       ];
       html += `

@@ -172,7 +172,7 @@ export const payrollRunPage = {
                 <div class="timeline-dot ${currentStep > 6 ? 'completed' : currentStep === 6 ? 'active' : ''}"></div>
                 <div class="timeline-content">
                   <div class="timeline-title">Outbound Email Dispatches</div>
-                  <div class="timeline-desc">Launch SMTP sending queues.</div>
+                  <div class="timeline-desc">Launch email dispatch queues.</div>
                 </div>
               </div>
             </div>
@@ -447,7 +447,7 @@ export const payrollRunPage = {
       <div style="display:flex; flex-direction:column; gap:var(--spacing-4); width:100%;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <h2 style="font-size: var(--text-base); font-weight: 700; color:var(--neutral-800);">Outbound SMTP Mail Service</h2>
+            <h2 style="font-size: var(--text-base); font-weight: 700; color:var(--neutral-800);">Outbound Email Dispatch</h2>
             <p style="font-size: var(--text-xs); color:var(--neutral-500); margin-top:2px;">Sending pay receipts to employee records</p>
           </div>
           
@@ -458,15 +458,15 @@ export const payrollRunPage = {
         </div>
 
         <!-- Terminal screen console -->
-        <div class="smtp-log-console" id="smtp-log-console">
-          <div class="smtp-log-line system" id="smtp-init-log-line">[SMTP QUEUE STARTED] Initializing connection to mail server...</div>
+        <div class="email-log-console" id="email-log-console">
+          <div class="email-log-line system" id="email-init-log-line">[EMAIL DISPATCH STARTED] Initializing SendGrid dispatch...</div>
         </div>
       </div>
     `;
   },
   _renderFooter6(data) {
     return `
-      <span style="font-size:var(--text-xs); color:var(--neutral-400); align-self:center;" id="email-step-status-msg">SMTP Queuing In Progress...</span>
+      <span style="font-size:var(--text-xs); color:var(--neutral-400); align-self:center;" id="email-step-status-msg">Email dispatch in progress...</span>
       <button class="btn btn-primary" id="step6-next-btn" disabled>Generate Run Summary</button>
     `;
   },
@@ -820,21 +820,21 @@ export const payrollRunPage = {
   },
 
   _bindStep6() {
-    // Patch the initial log line with the live SMTP host from Settings
-    settingsService.getSettings().then((settings) => {
-      const initLine = document.getElementById('smtp-init-log-line');
-      if (initLine && settings?.smtpServer) {
-        initLine.textContent = `[SMTP QUEUE STARTED] Initializing connection to ${settings.smtpServer}:${settings.smtpPort}...`;
+    // Patch the initial log line with the live dispatch state
+    settingsService.getSettings().then(() => {
+      const initLine = document.getElementById('email-init-log-line');
+      if (initLine) {
+        initLine.textContent = '[EMAIL DISPATCH STARTED] Initializing SendGrid dispatch...';
       }
     }).catch(() => {
       // Settings fetch failed — leave the generic placeholder as-is
     });
-    // Automatically trigger SMTP dispatches
-    this._runSmtpDispatches();
+    // Automatically trigger email dispatches
+    this._runEmailDispatches();
   },
 
-  async _runSmtpDispatches() {
-    const consoleBox = document.getElementById('smtp-log-console');
+  async _runEmailDispatches() {
+    const consoleBox = document.getElementById('email-log-console');
     const sentCount = document.getElementById('mails-sent-count');
     const failedCount = document.getElementById('mails-failed-count');
     const nextBtn = document.getElementById('step6-next-btn');
@@ -843,7 +843,7 @@ export const payrollRunPage = {
     const logLine = (text, type = 'system') => {
       if (!consoleBox) return;
       const line = document.createElement('div');
-      line.className = `smtp-log-line ${type}`;
+      line.className = `email-log-line ${type}`;
       line.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
       consoleBox.appendChild(line);
       consoleBox.scrollTop = consoleBox.scrollHeight;
@@ -851,7 +851,7 @@ export const payrollRunPage = {
 
     const finishStep = (sent, failed, message) => {
       state.patchRunData({ emailsFailed: failed });
-      logLine(`SMTP Pipeline complete. Sent: ${sent}, Failed: ${failed}`, 'system');
+      logLine(`Email delivery pipeline complete. Sent: ${sent}, Failed: ${failed}`, 'system');
       if (statusMsg) statusMsg.textContent = message;
       if (nextBtn) {
         nextBtn.removeAttribute('disabled');
@@ -903,7 +903,7 @@ export const payrollRunPage = {
       currentSent,
       currentFailed,
       currentFailed > 0
-        ? `SMTP complete. Warnings: ${currentFailed} deliveries blocked.`
+        ? `Email delivery complete. Warnings: ${currentFailed} deliveries blocked.`
         : 'All pay receipt emails successfully dispatched.'
     );
   },
