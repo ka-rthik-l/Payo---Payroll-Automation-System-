@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 import prisma from '../utils/prisma.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { pdfService } from './pdf.service.js';
@@ -6,6 +6,11 @@ import { buildPayslipEmailSubject } from './payroll.service.js';
 
 const SIMULATE_FAILURE = process.env.SIMULATE_EMAIL_FAILURE === 'true';
 const STALE_SENDING_MS = 5 * 60 * 1000;
+
+// Initialize SendGrid if API key provided
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 export const emailService = {
   async getEmailLogs(status = '') {
@@ -152,23 +157,37 @@ export const emailService = {
     return result;
   },
 
-  async testConnection() {
+  async testConnection(testEmailAddress) {
     const settings = await prisma.settings.findUnique({ where: { id: 1 } });
     if (!settings) {
       throw new AppError('Settings not found.', 404, 'SETTINGS_NOT_FOUND');
     }
 
-    const transporter = createTransporter(settings);
+    const sender = process.env.SENDGRID_SENDER_EMAIL || settings.emailSender;
+    const apiKey = process.env.SENDGRID_API_KEY;
 
-    if (typeof transporter.verify !== 'function') {
-      return { success: false, message: 'transporter.verify is not a function (likely a mock transporter in dev)' };
+    if (!apiKey) {
+      return { success: false, message: 'SENDGRID_API_KEY not configured' };
     }
 
+    if (!sender) {
+      return { success: false, message: 'No sender configured (SENDGRID_SENDER_EMAIL or settings.emailSender)' };
+    }
+
+    const recipient = testEmailAddress || sender;
+
     try {
-      await transporter.verify();
+      await sgMail.send({
+        to: recipient,
+        from: sender,
+        subject: 'Payo SendGrid Test',
+        text: `This is a test message to validate SendGrid configuration. Recipient: ${recipient}`
+      });
+
       return { success: true };
     } catch (err) {
-      return { success: false, code: err.code, message: err.message };
+      const message = err?.response?.body || err.message || String(err);
+      return { success: false, code: err.code, message };
     }
   }
 };
@@ -216,16 +235,10 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 
     const { buffer, filename } = await pdfService.generatePayslipPdfBuffer(payslip.id);
 
-    console.log('Calling sendMail...', {
-      from: settings.emailSender,
-      to: log.recipient,
-      subject,
-      host: transporter.options?.host || process.env.SMTP_HOST || settings.smtpHost,
-      port: transporter.options?.port || Number(process.env.SMTP_PORT || settings.smtpPort || 587)
-    });
+    console.log('Calling sendMail (SendGrid) to:', log.recipient, 'subject:', subject);
 
     await transporter.sendMail({
-      from: settings.emailSender,
+      from: process.env.SENDGRID_SENDER_EMAIL || settings.emailSender,
       to: log.recipient,
       subject,
       text: buildEmailBody(log.employeeName, run.month, run.year),
@@ -267,52 +280,57 @@ async function sendPayslipEmail(transporter, settings, log, run, { isRetry = fal
 }
 
 function createTransporter(settings) {
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const host = process.env.SMTP_HOST || settings.smtpHost;
-  const port = Number(process.env.SMTP_PORT || settings.smtpPort || 587);
-  const secure = process.env.SMTP_SECURE === 'true';
   const isProduction = process.env.NODE_ENV === 'production';
 
-  console.log('--- SMTP CONFIG DIAGNOSTICS ---');
-  console.log('SMTP HOST:', host);
-  console.log('SMTP PORT:', port);
-  console.log('SMTP SECURE:', secure);
-  console.log('SMTP USER EXISTS:', !!user);
-  console.log('SMTP PASS EXISTS:', !!pass);
-  console.log('Creating transporter...');
-
-  if (user && pass) {
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure,
-      auth: { user, pass }
-    });
-
-    console.log('Transporter options after createTransport():', JSON.stringify(transporter.options, null, 2));
-
-    if (typeof transporter.verify === 'function') {
-      console.log('Transporter verify exists.');
-    } else {
-      console.log('Transporter verify does not exist.');
+  // If no SendGrid API key configured, provide a dev stub in non-production
+  if (!process.env.SENDGRID_API_KEY) {
+    if (isProduction) {
+      throw new AppError('SENDGRID_API_KEY is not configured', 503, 'SENDGRID_NOT_CONFIGURED');
     }
 
-    return transporter;
-  }
-
-  if (isProduction) {
-    throw new AppError(
-      'SMTP is not configured. Set SMTP_USER and SMTP_PASS environment variables.',
-      503,
-      'SMTP_NOT_CONFIGURED'
-    );
+    return {
+      options: {},
+      sendMail: async (options) => {
+        console.log(`[DEV EMAIL - SendGrid stub] To: ${options.to} | Subject: ${options.subject} | Attachments: ${options.attachments?.length || 0}`);
+        return { messageId: `dev-${Date.now()}` };
+      }
+    };
   }
 
   return {
+    options: { provider: 'sendgrid' },
     sendMail: async (options) => {
-      console.log(`[DEV EMAIL] To: ${options.to} | Subject: ${options.subject} | Attachments: ${options.attachments?.length || 0}`);
-      return { messageId: `dev-${Date.now()}` };
+      const from = options.from;
+      const to = options.to;
+      const msg = {
+        to,
+        from,
+        subject: options.subject,
+        text: options.text,
+        html: options.html
+      };
+
+      if (options.attachments && Array.isArray(options.attachments)) {
+        msg.attachments = options.attachments.map((a) => {
+          let content = a.content;
+          if (content && typeof content.toString === 'function' && !(typeof content === 'string')) {
+            try {
+              content = content.toString('base64');
+            } catch (e) {
+              content = Buffer.from(content).toString('base64');
+            }
+          }
+
+          return {
+            content,
+            filename: a.filename || 'attachment',
+            type: a.contentType || a.type || 'application/octet-stream',
+            disposition: a.disposition || 'attachment'
+          };
+        });
+      }
+
+      return sgMail.send(msg);
     }
   };
 }

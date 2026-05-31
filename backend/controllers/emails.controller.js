@@ -24,7 +24,8 @@ export const emailsController = {
   },
 
   async testConnection(req, res) {
-    const result = await emailService.testConnection();
+    const { testEmailAddress } = req.body || {};
+    const result = await emailService.testConnection(testEmailAddress);
     if (result.success) {
       return res.json({ success: true });
     } else {
