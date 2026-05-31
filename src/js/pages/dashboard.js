@@ -108,7 +108,7 @@ export const dashboardPage = {
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-8); align-items: start;">
+        <div class="dashboard-activity-grid">
           <div class="card">
             <div class="card-header" style="border-bottom: 1px solid var(--neutral-100); padding-bottom: var(--spacing-4);">
               <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--neutral-900);">Recent Payroll Runs</h3>
