@@ -96,21 +96,10 @@ export const payrollRunPage = {
       }
 
       const connectorHtml = idx < stepsData.length - 1
-        ? `<div class="workflow-step-connector ${s.num < currentStep ? 'completed' : 'future'}"></div>`
+        ? `<div class="workflow-step-connector ${s.num < currentStep ? 'completed' : 'future'}" role="separator" aria-hidden="true"></div>`
         : '';
 
-      return `
-        <div class="workflow-step-group">
-          <div class="workflow-step ${stepClass}">
-            <div class="workflow-step-circle">${iconContent}</div>
-            <div class="workflow-step-copy">
-              <span class="workflow-step-title">${s.title}</span>
-              <span class="workflow-step-state">${stateName}</span>
-            </div>
-          </div>
-          ${connectorHtml}
-        </div>
-      `;
+      return `<div class="workflow-step-group"><div class="workflow-step ${stepClass}"><div class="workflow-step-circle">${iconContent}</div><div class="workflow-step-copy"><span class="workflow-step-title">${s.title}</span><span class="workflow-step-state workflow-step-status">${stateName}</span></div></div>${connectorHtml}</div>`;
     }).join('');
 
     return `
