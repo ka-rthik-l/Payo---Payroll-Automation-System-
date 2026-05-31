@@ -8,15 +8,11 @@ export const settingsController = {
   },
 
   async updateCompany(req, res) {
-    const { companyName, address, taxId, emailSender } = req.body;
-    if (!companyName || !address || !taxId || !emailSender) {
-      throw new AppError('companyName, address, taxId, and emailSender are required.', 400, 'VALIDATION_ERROR');
+    const { companyName, address, taxId } = req.body;
+    if (!companyName || !address || !taxId) {
+      throw new AppError('companyName, address, and taxId are required.', 400, 'VALIDATION_ERROR');
     }
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(emailSender)) {
-      throw new AppError('emailSender must be a valid email address.', 400, 'VALIDATION_ERROR');
-    }
-    const settings = await settingsService.updateCompany({ companyName, address, taxId, emailSender });
+    const settings = await settingsService.updateCompany({ companyName, address, taxId });
     res.json({ success: true, data: settings });
   },
 

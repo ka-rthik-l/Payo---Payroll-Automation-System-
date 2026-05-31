@@ -16,8 +16,7 @@ export const settingsService = {
       data: {
         companyName: data.companyName,
         address: data.address,
-        taxId: data.taxId,
-        emailSender: data.emailSender
+        taxId: data.taxId
       }
     });
     return formatSettings(settings);
