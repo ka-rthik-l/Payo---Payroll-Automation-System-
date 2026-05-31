@@ -36,35 +36,6 @@ export const payrollRunPage = {
       ? `${runData.runMeta.month} ${runData.runMeta.year}`
       : 'Active Period';
 
-    // Build the Stepper Stepper indicators
-    const steps = [
-      { num: 1, label: 'Employees CSV' },
-      { num: 2, label: 'Salaries CSV' },
-      { num: 3, label: 'Validate' },
-      { num: 4, label: 'Preview' },
-      { num: 5, label: 'Generate' },
-      { num: 6, label: 'Send Emails' },
-      { num: 7, label: 'Done' }
-    ];
-
-    const stepperHtml = steps.map((s, idx) => {
-      let statusClass = '';
-      if (s.num === currentStep) statusClass = 'active';
-      else if (s.num < currentStep) statusClass = 'completed';
-
-      const connectorHtml = idx < steps.length - 1 
-        ? `<div class="step-connector ${s.num < currentStep ? 'completed' : ''}"></div>`
-        : '';
-
-      return `
-        <div class="step-item ${statusClass}">
-          <div class="step-circle">${s.num < currentStep ? '✓' : s.num}</div>
-          <span class="step-label">${s.label}</span>
-        </div>
-        ${connectorHtml}
-      `;
-    }).join('');
-
     // Renders the specific Wizard body
     let stepContentHtml = '';
     let footerButtonsHtml = '';
@@ -110,7 +81,7 @@ export const payrollRunPage = {
       { num: 7, title: 'Done' }
     ];
 
-    const workflowStepsHtml = stepsData.map(s => {
+    const workflowStepsHtml = stepsData.map((s, idx) => {
       let stepClass = 'future';
       let iconContent = s.num;
       let stateName = 'Upcoming';
@@ -124,13 +95,20 @@ export const payrollRunPage = {
         stateName = 'Completed';
       }
 
+      const connectorHtml = idx < stepsData.length - 1
+        ? `<div class="workflow-step-connector ${s.num < currentStep ? 'completed' : 'future'}"></div>`
+        : '';
+
       return `
-        <div class="workflow-step ${stepClass}">
-          <div class="workflow-step-circle">${iconContent}</div>
-          <div style="display:flex; flex-direction:column; gap:2px; align-items:center;">
-            <span class="workflow-step-title">${s.title}</span>
-            <span class="workflow-step-state">${stateName}</span>
+        <div class="workflow-step-group">
+          <div class="workflow-step ${stepClass}">
+            <div class="workflow-step-circle">${iconContent}</div>
+            <div class="workflow-step-copy">
+              <span class="workflow-step-title">${s.title}</span>
+              <span class="workflow-step-state">${stateName}</span>
+            </div>
           </div>
+          ${connectorHtml}
         </div>
       `;
     }).join('');
@@ -164,7 +142,12 @@ export const payrollRunPage = {
 
           <!-- Bottom Workflow Progress steps panel -->
           <div class="card" style="width:100%;">
-            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--neutral-900); border-bottom: 1px solid var(--neutral-200); padding-bottom: var(--spacing-3); margin-bottom: var(--spacing-4);">Payroll Cycle Steps</h3>
+            <div class="workflow-panel-header">
+              <div>
+                <h3>Payroll Cycle Steps</h3>
+                <p class="workflow-panel-description">Track the current run from file upload through validation, preview, generation, and delivery.</p>
+              </div>
+            </div>
             <div class="workflow-steps-row">
               ${workflowStepsHtml}
             </div>
