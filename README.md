@@ -200,6 +200,29 @@ SIMULATE_EMAIL_FAILURE=true
 
 ---
 
+## Email Delivery Architecture
+
+PAYO uses Twilio SendGrid as its outbound email delivery provider. The sender address is not configurable through the user interface because SendGrid requires sender authentication and verified identity before any email can be dispatched successfully.
+
+To support a production-grade deployment, the application reads the authenticated sender address from the backend deployment environment rather than storing it in application settings. This keeps email infrastructure configuration separate from payroll administration and prevents users from entering addresses that may fail sender authentication.
+
+Why this matters:
+
+- Prevents invalid or unauthorized sender addresses from being used
+- Ensures compliance with SendGrid sender authentication requirements
+- Supports reliable delivery by preserving the authenticated sending identity
+- Keeps UI settings focused on payroll and company configuration rather than email infrastructure
+
+To change the sender address in a deployed environment:
+
+1. Authenticate the new sender identity in SendGrid.
+2. Update the deployment environment variable used by the backend.
+3. Redeploy the application.
+
+This design decision intentionally keeps email delivery configuration outside the PAYO user interface.
+
+---
+
 ## 🚀 Installation & Setup
 
 ### Prerequisites

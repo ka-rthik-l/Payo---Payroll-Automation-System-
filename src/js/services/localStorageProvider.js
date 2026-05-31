@@ -31,7 +31,6 @@ export class LocalStorageProvider {
         companyName: 'Payo Operations Corp',
         address: '100 Pine Street, San Francisco, CA',
         taxId: 'XX-XXXXXXX',
-        emailSender: 'payroll@payo.co',
         currency: 'USD',
         activePeriodMonth: 'May',
         activePeriodYear: '2026'

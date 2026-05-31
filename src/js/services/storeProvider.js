@@ -32,9 +32,7 @@ export const db = {
   async update(table, _id, updates) {
     if (table === 'settings') {
       const keys = Object.keys(updates);
-      const companyKeys = ['companyName', 'address', 'taxId', 'emailSender'];
-      const calendarKeys = ['currency', 'activePeriodMonth', 'activePeriodYear'];
-
+      const companyKeys = ['companyName', 'address', 'taxId'];
       if (keys.some((k) => companyKeys.includes(k))) {
         return settingsService.updateCompany(updates);
       }

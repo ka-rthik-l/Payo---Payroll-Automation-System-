@@ -32,12 +32,12 @@ export const settingsPage = {
             </div>
 
             <!-- Right Forms Panel -->
-            <div style="flex:1; border-left: 1px solid var(--surface-border); padding-left: var(--spacing-8);">
+            <div class="settings-panel">
               <!-- Tab 1: Profile -->
               <div class="settings-tab-panel ${this.state.activeTab === 'profile' ? 'active' : ''}">
-                <h3 style="font-size:var(--text-base); font-weight:700; color:var(--neutral-900); margin-bottom:var(--spacing-4);">Company Profile</h3>
+                <h3 class="settings-panel-title">Company Profile</h3>
                 
-                <form id="settings-profile-form" style="display:flex; flex-direction:column; gap:var(--spacing-4); max-width:480px;">
+                <form id="settings-profile-form" class="settings-panel-form">
                   <div class="form-group">
                     <label class="form-label">Company Legal Name</label>
                     <input type="text" class="form-control" name="companyName" value="${settings.companyName || ''}" required>
@@ -50,19 +50,17 @@ export const settingsPage = {
                     <label class="form-label">Tax ID / Incorporation Reference</label>
                     <input type="text" class="form-control" name="taxId" value="${settings.taxId || ''}" required>
                   </div>
-                  <div class="form-group">
-                    <label class="form-label">Sender Email</label>
-                    <input type="email" class="form-control" name="emailSender" value="${settings.emailSender || ''}" required>
+                  <div class="settings-info-grid">
+                    <div class="settings-info-card">
+                      <label class="form-label">Email Provider</label>
+                      <input type="text" class="form-control" value="SendGrid" readonly>
+                    </div>
+                    <div class="settings-info-card">
+                      <label class="form-label">Delivery Method</label>
+                      <input type="text" class="form-control" value="HTTPS API" readonly>
+                    </div>
                   </div>
-                  <div class="form-group" style="background-color: var(--surface-sunken); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--surface-sunken-border);">
-                    <label class="form-label">Email Provider</label>
-                    <input type="text" class="form-control" value="SendGrid" readonly>
-                  </div>
-                  <div class="form-group" style="background-color: var(--surface-sunken); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--surface-sunken-border);">
-                    <label class="form-label">Delivery Method</label>
-                    <input type="text" class="form-control" value="HTTPS API" readonly>
-                  </div>
-                  <button class="btn btn-primary" type="submit" style="align-self:flex-start; margin-top:var(--spacing-2);">Save Profile Configuration</button>
+                  <button class="btn btn-primary" type="submit">Save Profile Configuration</button>
                 </form>
               </div>
 
