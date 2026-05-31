@@ -898,8 +898,10 @@
 
 .workflow-steps-row {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
   width: 100%;
   overflow-x: auto;
   padding: var(--spacing-3) 0;
@@ -907,6 +909,7 @@
 
 .workflow-step-group {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: var(--spacing-3);
   min-width: 220px;
@@ -915,7 +918,9 @@
 
 .workflow-step {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--spacing-3);
   padding: var(--spacing-3);
   min-width: 220px;
@@ -928,9 +933,9 @@
 }
 
 .workflow-step-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -963,6 +968,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .workflow-step-title {
@@ -994,11 +1001,11 @@
 }
 
 .workflow-step-connector {
-  width: 40px;
-  height: 2px;
+  height: 4px;
+  flex: 1;
+  min-width: 0;
   border-radius: var(--radius-full);
   background-color: var(--surface-border);
-  flex-shrink: 0;
 }
 
 .workflow-step-connector.completed {
