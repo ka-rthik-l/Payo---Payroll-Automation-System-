@@ -112,18 +112,6 @@
         </nav>
       </div>
 
-      <!-- Account summary bottom container -->
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="sidebar-logo-mark">
-            <img src="./logo.png" alt="Payo logo" />
-          </div>
-          <div class="user-details">
-            <span class="user-name">Evaluator</span>
-            <span class="user-role">HR Coordinator</span>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <!-- Main Content Wrapper -->
@@ -147,6 +135,25 @@
 
         <div class="header-right">
           <span class="badge-period" id="header-active-period">May 2026</span>
+
+          <button class="icon-btn theme-toggle-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"></button>
+
+          <div class="profile-action">
+            <button class="icon-btn" id="profile-menu-trigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Open account menu">
+              <span class="profile-avatar">E</span>
+            </button>
+            <div class="profile-menu" id="profile-menu" role="menu" aria-label="Account menu">
+              <div class="profile-menu-section">
+                <span class="profile-menu-title">Evaluator</span>
+                <span class="profile-menu-subtitle">HR Coordinator</span>
+              </div>
+              <div class="profile-menu-list">
+                <button class="profile-menu-item" type="button">Theme: <span id="theme-menu-status">Light</span></button>
+                <button class="profile-menu-item" type="button">About PAYO</button>
+                <button class="profile-menu-item disabled" type="button" disabled>Sign Out</button>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 

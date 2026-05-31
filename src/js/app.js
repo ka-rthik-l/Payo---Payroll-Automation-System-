@@ -25,6 +25,65 @@ class App {
     this.mainView = null;
   }
 
+  initTheme() {
+    const storedTheme = window.localStorage.getItem('payo-theme');
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+    const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  }
+
+  setThemeButtonState() {
+    const theme = document.documentElement.dataset.theme || 'light';
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+      toggle.innerHTML = theme === 'dark'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>';
+    }
+
+    const status = document.getElementById('theme-menu-status');
+    if (status) {
+      status.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+    }
+  }
+
+  bindHeaderActions() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const profileToggle = document.getElementById('profile-menu-trigger');
+    const profileMenu = document.getElementById('profile-menu');
+
+    if (themeToggle) {
+      themeToggle.onclick = () => this.toggleTheme();
+    }
+
+    if (profileToggle && profileMenu) {
+      profileToggle.onclick = (event) => {
+        event.stopPropagation();
+        const isOpen = profileMenu.classList.toggle('open');
+        profileToggle.setAttribute('aria-expanded', String(isOpen));
+      };
+    }
+
+    document.addEventListener('click', (event) => {
+      if (!profileMenu || !profileToggle) return;
+      if (!profileMenu.contains(event.target) && !profileToggle.contains(event.target)) {
+        profileMenu.classList.remove('open');
+        profileToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    this.setThemeButtonState();
+  }
+
+  toggleTheme() {
+    const currentTheme = document.documentElement.dataset.theme || 'light';
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = nextTheme;
+    window.localStorage.setItem('payo-theme', nextTheme);
+    this.setThemeButtonState();
+  }
+
   async start() {
     // 1. Initialize DB and Seed Data
     try {
@@ -36,6 +95,8 @@ class App {
 
     // 2. Query DOM anchors
     this.mainView = document.getElementById('main-view');
+    this.initTheme();
+    this.bindHeaderActions();
     
     // Set active period in header pill
     const settings = await settingsService.getSettings();
