@@ -170,14 +170,15 @@ class App {
       }
     });
 
-    // Update Breadcrumb Navigation UI
-    this.updateBreadcrumbs(view);
-
     // Render Page contents
     if (this.mainView) {
       try {
         // Render view & bind interactive listeners
         this.mainView.innerHTML = await page.render();
+        
+        // Update Breadcrumb Navigation UI
+        this.updateBreadcrumbs(view);
+
         if (page.afterRender) {
           page.afterRender();
         }
@@ -258,5 +259,6 @@ class App {
 // Instantiate and start after window loading completes
 window.addEventListener('DOMContentLoaded', () => {
   const app = new App();
+  window.app = app;
   app.start();
 });

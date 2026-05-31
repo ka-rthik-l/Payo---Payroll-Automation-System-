@@ -64,45 +64,48 @@ export const emailsPage = {
 
     return `
       <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--spacing-6); flex-wrap:wrap; gap:var(--spacing-4);">
-          <div>
-            <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Email Center</h1>
-            <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Track and manage payslip email dispatches</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Email Center</h1>
+              <p class="page-header-subtitle">Track and manage payslip email dispatches</p>
+            </div>
+            ${failedCount > 0 ? `
+              <button class="btn btn-primary" id="retry-all-failed-btn">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px; height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18" /></svg>
+                Retry All Failed Emails
+              </button>
+            ` : ''}
           </div>
-          ${failedCount > 0 ? `
-            <button class="btn btn-primary" id="retry-all-failed-btn">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px; height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18" /></svg>
-              Retry All Failed Emails
-            </button>
-          ` : ''}
         </div>
 
         <!-- Metric Summaries -->
         <div class="email-delivery-summary" style="margin-bottom: var(--spacing-8);">
-          <div class="email-stat-card" style="border-left: 3px solid var(--success-500);">
+          <div class="email-stat-card" style="border-left: 3px solid var(--status-success-text);">
             <div>
-              <div style="font-size:10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Sent & Delivered</div>
-              <div style="font-size:var(--text-xl); font-weight:800; color:var(--neutral-800); margin-top:4px;">${sentCount}</div>
+              <div style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Sent & Delivered</div>
+              <div class="email-stat-value">${sentCount}</div>
             </div>
-            <div style="color:var(--success-500);">
+            <div style="color:var(--status-success-text);">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:28px; height:28px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
           </div>
           <div class="email-stat-card" style="border-left: 3px solid var(--primary-500);">
             <div>
-              <div style="font-size:10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Pending / Transmitting</div>
-              <div style="font-size:var(--text-xl); font-weight:800; color:var(--neutral-800); margin-top:4px;">${pendingCount}</div>
+              <div style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Pending / Transmitting</div>
+              <div class="email-stat-value">${pendingCount}</div>
             </div>
             <div style="color:var(--primary-500);">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:28px; height:28px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
           </div>
-          <div class="email-stat-card" style="border-left: 3px solid var(--danger-500);">
+          <div class="email-stat-card" style="border-left: 3px solid var(--status-danger-text);">
             <div>
-              <div style="font-size:10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Failed Deliveries</div>
-              <div style="font-size:var(--text-xl); font-weight:800; color:var(--neutral-800); margin-top:4px;">${failedCount}</div>
+              <div style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Failed Deliveries</div>
+              <div class="email-stat-value">${failedCount}</div>
             </div>
-            <div style="color:var(--danger-500);">
+            <div style="color:var(--status-danger-text);">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:28px; height:28px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
             </div>
           </div>
@@ -119,22 +122,24 @@ export const emailsPage = {
             </div>
           </div>
 
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Employee Name</th>
-                <th>Recipient Address</th>
-                <th>Subject Line</th>
-                <th>Timestamp</th>
-                <th>Status</th>
-                <th style="text-align:center;">Attempts</th>
-                <th style="width:100px; text-align:right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tableBodyHtml}
-            </tbody>
-          </table>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Recipient Address</th>
+                  <th>Subject Line</th>
+                  <th>Timestamp</th>
+                  <th>Status</th>
+                  <th style="text-align:center;">Attempts</th>
+                  <th style="width:100px; text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableBodyHtml}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     `;
@@ -198,6 +203,9 @@ export const emailsPage = {
     const mainView = document.getElementById('main-view');
     if (mainView) {
       mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('emails');
+      }
       this.afterRender();
     }
   }

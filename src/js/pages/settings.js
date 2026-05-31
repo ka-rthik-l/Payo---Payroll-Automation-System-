@@ -13,9 +13,14 @@ export const settingsPage = {
 
     return `
       <div>
-        <div style="margin-bottom: var(--spacing-6);">
-          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Settings</h1>
-          <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Configure company details and payroll cycle rules</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Settings</h1>
+              <p class="page-header-subtitle">Configure company details and payroll cycle rules</p>
+            </div>
+          </div>
         </div>
 
         <div class="card" style="padding: var(--spacing-8);">
@@ -27,7 +32,7 @@ export const settingsPage = {
             </div>
 
             <!-- Right Forms Panel -->
-            <div style="flex:1; border-left: 1px solid var(--neutral-200); padding-left: var(--spacing-8);">
+            <div style="flex:1; border-left: 1px solid var(--surface-border); padding-left: var(--spacing-8);">
               <!-- Tab 1: Profile -->
               <div class="settings-tab-panel ${this.state.activeTab === 'profile' ? 'active' : ''}">
                 <h3 style="font-size:var(--text-base); font-weight:700; color:var(--neutral-900); margin-bottom:var(--spacing-4);">Company Profile</h3>
@@ -49,11 +54,11 @@ export const settingsPage = {
                     <label class="form-label">Sender Email</label>
                     <input type="email" class="form-control" name="emailSender" value="${settings.emailSender || ''}" required>
                   </div>
-                  <div class="form-group" style="background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
+                  <div class="form-group" style="background-color: var(--surface-sunken); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--surface-sunken-border);">
                     <label class="form-label">Email Provider</label>
                     <input type="text" class="form-control" value="SendGrid" readonly>
                   </div>
-                  <div class="form-group" style="background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
+                  <div class="form-group" style="background-color: var(--surface-sunken); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--surface-sunken-border);">
                     <label class="form-label">Delivery Method</label>
                     <input type="text" class="form-control" value="HTTPS API" readonly>
                   </div>
@@ -166,6 +171,9 @@ export const settingsPage = {
     const mainView = document.getElementById('main-view');
     if (mainView) {
       mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('settings');
+      }
       this.afterRender();
     }
   }

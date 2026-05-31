@@ -100,26 +100,59 @@ export const payrollRunPage = {
         break;
     }
 
+    const stepsData = [
+      { num: 1, title: 'Employees CSV' },
+      { num: 2, title: 'Salaries CSV' },
+      { num: 3, title: 'Validate' },
+      { num: 4, title: 'Preview' },
+      { num: 5, title: 'Generate' },
+      { num: 6, title: 'Send Emails' },
+      { num: 7, title: 'Done' }
+    ];
+
+    const workflowStepsHtml = stepsData.map(s => {
+      let stepClass = 'future';
+      let iconContent = s.num;
+      let stateName = 'Upcoming';
+
+      if (s.num === currentStep) {
+        stepClass = 'active';
+        stateName = 'In Progress';
+      } else if (s.num < currentStep) {
+        stepClass = 'completed';
+        iconContent = '✓';
+        stateName = 'Completed';
+      }
+
+      return `
+        <div class="workflow-step ${stepClass}">
+          <div class="workflow-step-circle">${iconContent}</div>
+          <div style="display:flex; flex-direction:column; gap:2px; align-items:center;">
+            <span class="workflow-step-title">${s.title}</span>
+            <span class="workflow-step-state">${stateName}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
     return `
       <div>
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:var(--spacing-4); margin-bottom: var(--spacing-6);">
-          <div>
-            <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Payroll Run Center</h1>
-            <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Execute ${periodLabel} batch salary processing</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Payroll Run Center</h1>
+              <p class="page-header-subtitle">Execute ${periodLabel} batch salary processing</p>
+            </div>
+            <button class="btn btn-danger btn-sm" id="delete-run-btn" type="button">Delete Run</button>
           </div>
-          <button class="btn btn-danger btn-sm" id="delete-run-btn" type="button">Delete Run</button>
         </div>
 
-        <div class="run-center-grid">
+        <div style="display:flex; flex-direction:column; gap:var(--spacing-6); width:100%;">
           <!-- Main Wizard Canvas -->
-          <div class="card wizard-card">
-            <!-- Stepper Stepper header -->
-            <div class="stepper" style="border:none; box-shadow:none; padding:0; border-bottom:1px solid var(--neutral-100); border-radius:0; padding-bottom:var(--spacing-6);">
-              ${stepperHtml}
-            </div>
-
+          <div class="card wizard-card" style="width:100%;">
             <!-- Stage Workspace -->
-            <div class="wizard-body">
+            <div class="wizard-body" style="padding:var(--spacing-4) 0;">
               ${stepContentHtml}
             </div>
 
@@ -129,52 +162,11 @@ export const payrollRunPage = {
             </div>
           </div>
 
-          <!-- Secondary Timeline Dashboard -->
-          <div class="card" style="align-self:stretch;">
-            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--neutral-900); border-bottom:1px solid var(--neutral-100); padding-bottom:var(--spacing-3);">Cycle Steps</h3>
-            <div class="timeline" style="margin-top: var(--spacing-4);">
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 1 ? 'completed' : currentStep === 1 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Import Employee Directories</div>
-                  <div class="timeline-desc">Input active workforce roster data files.</div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 2 ? 'completed' : currentStep === 2 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Import Salary Configurations</div>
-                  <div class="timeline-desc">Map HRA, basic, and deductions.</div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 3 ? 'completed' : currentStep === 3 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Data Validation Engine</div>
-                  <div class="timeline-desc">Identify column anomalies.</div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 4 ? 'completed' : currentStep === 4 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Payroll Calculation Preview</div>
-                  <div class="timeline-desc">Approve calculated net salaries.</div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 5 ? 'completed' : currentStep === 5 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Compile Pay Slips</div>
-                  <div class="timeline-desc">Generate printable records.</div>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot ${currentStep > 6 ? 'completed' : currentStep === 6 ? 'active' : ''}"></div>
-                <div class="timeline-content">
-                  <div class="timeline-title">Outbound Email Dispatches</div>
-                  <div class="timeline-desc">Launch email dispatch queues.</div>
-                </div>
-              </div>
+          <!-- Bottom Workflow Progress steps panel -->
+          <div class="card" style="width:100%;">
+            <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--neutral-900); border-bottom: 1px solid var(--neutral-200); padding-bottom: var(--spacing-3); margin-bottom: var(--spacing-4);">Payroll Cycle Steps</h3>
+            <div class="workflow-steps-row">
+              ${workflowStepsHtml}
             </div>
           </div>
         </div>
@@ -1053,6 +1045,9 @@ export const payrollRunPage = {
     const mainView = document.getElementById('main-view');
     if (mainView) {
       mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('payroll');
+      }
       this.afterRender();
     }
   }

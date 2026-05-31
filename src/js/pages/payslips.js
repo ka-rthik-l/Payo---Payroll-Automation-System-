@@ -75,9 +75,14 @@ export const payslipsPage = {
 
     return `
       <div>
-        <div style="margin-bottom: var(--spacing-6);">
-          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Payslips Registry</h1>
-          <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">View generated salary receipts and export printable documents</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Payslips Registry</h1>
+              <p class="page-header-subtitle">View generated salary receipts and export printable documents</p>
+            </div>
+          </div>
         </div>
 
         <div class="table-container">
@@ -323,6 +328,9 @@ export const payslipsPage = {
     const mainView = document.getElementById('main-view');
     if (mainView) {
       mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('payslips');
+      }
       this.afterRender();
     }
   }

@@ -52,15 +52,18 @@ export const employeesPage = {
 
     return `
       <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--spacing-6); flex-wrap:wrap; gap:var(--spacing-4);">
-          <div>
-            <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Employee Directory</h1>
-            <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Manage active employee files and contact directories</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Employee Directory</h1>
+              <p class="page-header-subtitle">Manage active employee files and contact directories</p>
+            </div>
+            <button class="btn btn-primary" id="add-employee-btn">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px; height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+              Add Employee
+            </button>
           </div>
-          <button class="btn btn-primary" id="add-employee-btn">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px; height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-            Add Employee
-          </button>
         </div>
 
         <div class="table-container">
@@ -169,6 +172,9 @@ export const employeesPage = {
     const mainView = document.getElementById('main-view');
     if (mainView) {
       mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('employees');
+      }
       this.afterRender();
     }
   },
@@ -245,61 +251,61 @@ export const employeesPage = {
     const bodyHtml = `
       <div style="display:flex; flex-direction:column; gap:var(--spacing-6);">
         <!-- Avatar card -->
-        <div style="display:flex; align-items:center; gap:var(--spacing-4); background-color:var(--neutral-50); padding:var(--spacing-4); border-radius:var(--radius-lg); border:1px solid var(--neutral-200);">
-          <div style="width:48px; height:48px; border-radius:var(--radius-full); background-color:var(--primary-100); color:var(--primary-700); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:var(--text-base);">
+        <div style="display:flex; align-items:center; gap:var(--spacing-4); background-color:var(--surface-sunken); padding:var(--spacing-4); border-radius:var(--radius-lg); border:1px solid var(--surface-sunken-border);">
+          <div style="width:48px; height:48px; border-radius:var(--radius-full); background-color:var(--interactive-soft); color:var(--primary-500); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:var(--text-base);">
             ${emp.name.split(' ').map(n=>n[0]).join('')}
           </div>
           <div>
-            <h3 style="font-weight:700; color:var(--neutral-900); font-size:var(--text-base);">${emp.name}</h3>
-            <p style="color:var(--neutral-400); font-size:var(--text-xs); font-family:monospace; margin-top:2px;">ID: ${emp.id}</p>
+            <h3 style="font-weight:700; color:var(--text-primary); font-size:var(--text-base);">${emp.name}</h3>
+            <p style="color:var(--text-muted); font-size:var(--text-xs); font-family:monospace; margin-top:2px;">ID: ${emp.id}</p>
           </div>
         </div>
 
         <!-- Meta fields -->
         <div style="display:flex; flex-direction:column; gap:var(--spacing-3);">
-          <h4 style="font-size:10px; font-weight:700; color:var(--neutral-400); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--neutral-200); padding-bottom:var(--spacing-1);">Employment details</h4>
+          <h4 style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--surface-sunken-border); padding-bottom:var(--spacing-1);">Employment details</h4>
           <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:var(--spacing-2); font-size:var(--text-sm);">
-            <span style="color:var(--neutral-500);">Email:</span>
-            <span style="font-weight:600; color:var(--neutral-800);">${emp.email}</span>
-            <span style="color:var(--neutral-500);">Department:</span>
-            <span style="font-weight:600; color:var(--neutral-800);">${emp.department}</span>
-            <span style="color:var(--neutral-500);">Designation:</span>
-            <span style="font-weight:600; color:var(--neutral-800);">${emp.role}</span>
+            <span style="color:var(--text-secondary);">Email:</span>
+            <span style="font-weight:600; color:var(--text-primary);">${emp.email}</span>
+            <span style="color:var(--text-secondary);">Department:</span>
+            <span style="font-weight:600; color:var(--text-primary);">${emp.department}</span>
+            <span style="color:var(--text-secondary);">Designation:</span>
+            <span style="font-weight:600; color:var(--text-primary);">${emp.role}</span>
           </div>
         </div>
 
         <!-- Salary summary if run center has generated payslips -->
         <div style="display:flex; flex-direction:column; gap:var(--spacing-3);">
-          <h4 style="font-size:10px; font-weight:700; color:var(--neutral-400); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--neutral-200); padding-bottom:var(--spacing-1);">Salary Configuration</h4>
+          <h4 style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--surface-sunken-border); padding-bottom:var(--spacing-1);">Salary Configuration</h4>
           ${lastPayslip ? `
-            <div style="background-color:var(--primary-50); border:1px solid var(--primary-100); padding:var(--spacing-4); border-radius:var(--radius-md);">
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--text-xs); color:var(--primary-700); margin-bottom:var(--spacing-2);">
+            <div style="background-color:var(--period-bg); border:1px solid var(--period-border); padding:var(--spacing-4); border-radius:var(--radius-md);">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--text-xs); color:var(--period-text); margin-bottom:var(--spacing-2);">
                 <span>Current Month Rate (${lastPayslip.month} ${lastPayslip.year})</span>
                 <span style="font-weight:700;">Calculated</span>
               </div>
               <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); font-weight:600; margin-bottom: var(--spacing-1);">
-                <span style="color:var(--neutral-600);">Basic Salary:</span>
-                <span style="color:var(--neutral-800);">${fmt(lastPayslip.baseSalary)}</span>
+                <span style="color:var(--text-secondary);">Basic Salary:</span>
+                <span style="color:var(--text-primary);">${fmt(lastPayslip.baseSalary)}</span>
               </div>
               <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); font-weight:600; margin-bottom: var(--spacing-1);">
-                <span style="color:var(--neutral-600);">HRA:</span>
-                <span style="color:var(--neutral-800);">${fmt(lastPayslip.hra)}</span>
+                <span style="color:var(--text-secondary);">HRA:</span>
+                <span style="color:var(--text-primary);">${fmt(lastPayslip.hra)}</span>
               </div>
               <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); font-weight:600; margin-bottom: var(--spacing-1);">
-                <span style="color:var(--neutral-600);">Allowances:</span>
-                <span style="color:var(--neutral-800);">${fmt(lastPayslip.allowances)}</span>
+                <span style="color:var(--text-secondary);">Allowances:</span>
+                <span style="color:var(--text-primary);">${fmt(lastPayslip.allowances)}</span>
               </div>
-              <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); font-weight:600; margin-bottom: var(--spacing-2); border-bottom:1px solid var(--primary-200); padding-bottom:var(--spacing-2);">
-                <span style="color:var(--neutral-600);">Deductions:</span>
-                <span style="color:var(--danger-600);">${fmt(lastPayslip.deductions)}</span>
+              <div style="display:flex; justify-content:space-between; font-size:var(--text-sm); font-weight:600; margin-bottom: var(--spacing-2); border-bottom:1px solid var(--period-border); padding-bottom:var(--spacing-2);">
+                <span style="color:var(--text-secondary);">Deductions:</span>
+                <span style="color:var(--status-danger-text);">${fmt(lastPayslip.deductions)}</span>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:var(--text-xs); font-weight:700; color:var(--primary-800);">NET MONTHLY PAY:</span>
-                <span style="font-size:var(--text-lg); font-weight:800; color:var(--primary-700);">${fmt(lastPayslip.netSalary)}</span>
+                <span style="font-size:var(--text-xs); font-weight:700; color:var(--period-text);">NET MONTHLY PAY:</span>
+                <span style="font-size:var(--text-lg); font-weight:800; color:var(--primary-500);">${fmt(lastPayslip.netSalary)}</span>
               </div>
             </div>
           ` : `
-            <p style="font-size:var(--text-sm); color:var(--neutral-400); font-style:italic;">No salary calculations processed for this employee yet.</p>
+            <p style="font-size:var(--text-sm); color:var(--text-muted); font-style:italic;">No salary calculations processed for this employee yet.</p>
           `}
         </div>
       </div>

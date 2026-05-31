@@ -22,9 +22,14 @@ export const dashboardPage = {
 
     return `
       <div>
-        <div style="margin-bottom: var(--spacing-6);">
-          <h1 style="font-size: var(--text-2xl); font-weight: 800; color: var(--neutral-900); letter-spacing:-0.03em;">Dashboard</h1>
-          <p style="font-size: var(--text-sm); color: var(--neutral-500); margin-top:2px;">Overview of payroll operations and metrics</p>
+        <div class="page-header">
+          <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+          <div class="page-header-title-row">
+            <div>
+              <h1 class="page-header-title">Dashboard</h1>
+              <p class="page-header-subtitle">Overview of payroll operations and metrics</p>
+            </div>
+          </div>
         </div>
 
         ${!isActivePeriodComplete ? `
@@ -44,11 +49,11 @@ export const dashboardPage = {
             </div>
           </div>
         ` : `
-          <div class="card" style="margin-bottom: var(--spacing-8); border-left: 4px solid var(--success-500); background-color: var(--success-50);">
+          <div class="card" style="margin-bottom: var(--spacing-8); border-left: 4px solid var(--status-success-border); background-color: var(--status-success-bg);">
             <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-6); flex-wrap: wrap;">
               <div>
-                <h2 style="font-size: var(--text-lg); font-weight: 700; color: var(--success-700);">${periodLabel} Payroll Completed</h2>
-                <p style="font-size: var(--text-sm); color: var(--success-600); margin-top: var(--spacing-1);">
+                <h2 style="font-size: var(--text-lg); font-weight: 700; color: var(--status-success-text);">${periodLabel} Payroll Completed</h2>
+                <p style="font-size: var(--text-sm); color: var(--status-success-text); opacity: 0.85; margin-top: var(--spacing-1);">
                   Payroll runs for the current active period have been executed, validated, and dispatched.
                 </p>
               </div>
