@@ -347,19 +347,25 @@ PDF slips are generated using `pdfkit` on the fly to avoid wasting local storage
 
 ### 1. Dashboard UI
 *Provide an image showing current statistics counters, active periods, and shortcut links.*
-`[Screenshot Placeholder: Dashboard Page]`
+![Dashboard 1](screenshots/Dashboard%201.png)
 
 ### 2. Payroll Run Wizard
 *Provide an image showing step 3 or 4: file validations reports showing pass/fail status.*
-`[Screenshot Placeholder: Validation step]`
+Payroll run wizard screenshots (workflow images from upload → validate → calculate → finalize):
+
+- ![Payroll 1](screenshots/Payroll%201.png)
+- ![Payroll 2](screenshots/Payroll%202.png)
+- ![Payroll 3](screenshots/Payroll%203.png)
+- ![Payroll 4](screenshots/Payroll%204.png)
+- ![Payroll 5](screenshots/Payroll%205.png)
 
 ### 3. Interactive Payslips Directory
 *Provide an image of the Payslip Registry list showing filter controls and the custom Payslip Drawer preview.*
-`[Screenshot Placeholder: Payslips Registry & Preview Drawer]`
+![Payslips Registry 1](screenshots/Payslips%20Registry%201.png)
 
 ### 4. Email Center & Logs
 *Provide an image of the email queue displaying status badges (Delivered/Failed) and action buttons.*
-`[Screenshot Placeholder: Outbound Email Logs]`
+![Email Center 1](screenshots/Email%20Center%201.png)
 
 ---
 
