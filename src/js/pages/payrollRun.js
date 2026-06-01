@@ -71,37 +71,6 @@ export const payrollRunPage = {
         break;
     }
 
-    const stepsData = [
-      { num: 1, title: 'Employees CSV' },
-      { num: 2, title: 'Salaries CSV' },
-      { num: 3, title: 'Validate' },
-      { num: 4, title: 'Preview' },
-      { num: 5, title: 'Generate' },
-      { num: 6, title: 'Send Emails' },
-      { num: 7, title: 'Done' }
-    ];
-
-    const workflowStepsHtml = stepsData.map((s, idx) => {
-      let stepClass = 'future';
-      let iconContent = s.num;
-      let stateName = 'Upcoming';
-
-      if (s.num === currentStep) {
-        stepClass = 'active';
-        stateName = 'In Progress';
-      } else if (s.num < currentStep) {
-        stepClass = 'completed';
-        iconContent = '✓';
-        stateName = 'Completed';
-      }
-
-      const connectorHtml = idx < stepsData.length - 1
-        ? `<div class="workflow-step-connector ${s.num < currentStep ? 'completed' : 'future'}" role="separator" aria-hidden="true"></div>`
-        : '';
-
-      return `<div class="workflow-step-group"><div class="workflow-step ${stepClass}"><div class="workflow-step-circle">${iconContent}</div><div class="workflow-step-copy"><span class="workflow-step-title">${s.title}</span><span class="workflow-step-state workflow-step-status">${stateName}</span></div></div>${connectorHtml}</div>`;
-    }).join('');
-
     return `
       <div>
         <div class="page-header">
@@ -126,19 +95,6 @@ export const payrollRunPage = {
             <!-- Navigation Controls -->
             <div class="wizard-footer">
               ${footerButtonsHtml}
-            </div>
-          </div>
-
-          <!-- Bottom Workflow Progress steps panel -->
-          <div class="card" style="width:100%;">
-            <div class="workflow-panel-header">
-              <div>
-                <h3>Payroll Cycle Steps</h3>
-                <p class="workflow-panel-description">Track the current run from file upload through validation, preview, generation, and delivery.</p>
-              </div>
-            </div>
-            <div class="workflow-steps-row">
-              ${workflowStepsHtml}
             </div>
           </div>
         </div>
