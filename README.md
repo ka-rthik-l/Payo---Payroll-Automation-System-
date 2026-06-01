@@ -347,25 +347,44 @@ PDF slips are generated using `pdfkit` on the fly to avoid wasting local storage
 
 ### 1. Dashboard UI
 *Provide an image showing current statistics counters, active periods, and shortcut links.*
-![Dashboard 1](screenshots/Dashboard%201.png)
+![Dashboard UI](screenshots/dashboard-1.png)
+
+*Figure: Dashboard showing live counters, active period and quick actions.*
 
 ### 2. Payroll Run Wizard
 *Provide an image showing step 3 or 4: file validations reports showing pass/fail status.*
 Payroll run wizard screenshots (workflow images from upload → validate → calculate → finalize):
+![Payroll Step 1](screenshots/payroll-1.png)
 
-- ![Payroll 1](screenshots/Payroll%201.png)
-- ![Payroll 2](screenshots/Payroll%202.png)
-- ![Payroll 3](screenshots/Payroll%203.png)
-- ![Payroll 4](screenshots/Payroll%204.png)
-- ![Payroll 5](screenshots/Payroll%205.png)
+*Figure: Employee CSV upload screen (example).* 
+
+![Payroll Step 2](screenshots/payroll-2.png)
+
+*Figure: Salary CSV upload screen (example).* 
+
+![Payroll Step 3](screenshots/payroll-3.png)
+
+*Figure: Validation report with errors and warnings.*
+
+![Payroll Step 4](screenshots/payroll-4.png)
+
+*Figure: Calculation preview showing gross, deductions, and net pay.*
+
+![Payroll Step 5](screenshots/payroll-5.png)
+
+*Figure: Finalization step with payslip generation summary.*
 
 ### 3. Interactive Payslips Directory
 *Provide an image of the Payslip Registry list showing filter controls and the custom Payslip Drawer preview.*
-![Payslips Registry 1](screenshots/Payslips%20Registry%201.png)
+![Payslips Registry 1](screenshots/payslips-registry-1.png)
+
+*Figure: Payslips registry with filters and the preview drawer.*
 
 ### 4. Email Center & Logs
 *Provide an image of the email queue displaying status badges (Delivered/Failed) and action buttons.*
-![Email Center 1](screenshots/Email%20Center%201.png)
+![Email Center 1](screenshots/email-center-1.png)
+
+*Figure: Email queue showing delivery statuses and retry actions.*
 
 ---
 
