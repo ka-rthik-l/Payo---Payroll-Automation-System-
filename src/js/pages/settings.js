@@ -1,15 +1,34 @@
 /* Settings Panel View for Payo */
 import { settingsService } from '../services/settingsService.js';
 import { toast } from '../components/toast.js';
+import { state as appState } from '../state.js';
 
 export const settingsPage = {
+  _settings: null,
+
   state: {
     activeTab: 'profile' // 'profile', 'rules'
   },
 
   async render() {
-    // 1. Fetch current settings from database
-    const settings = await settingsService.getSettings();
+    if (!this._settings) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Settings</h1>
+                <p class="page-header-subtitle">Configure company details and payroll cycle rules</p>
+              </div>
+            </div>
+          </div>
+          <div class="card skeleton" style="height: 400px; padding: var(--spacing-8);"></div>
+        </div>
+      `;
+    }
+
+    const settings = this._settings;
 
     return `
       <div>
@@ -103,7 +122,28 @@ export const settingsPage = {
     `;
   },
 
+  async _loadData() {
+    try {
+      this._settings = await settingsService.getSettings();
+      const mainView = document.getElementById('main-view');
+      if (mainView && appState.currentView === 'settings') {
+        mainView.innerHTML = await this.render();
+        if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+          window.app.updateBreadcrumbs('settings');
+        }
+        this.afterRender();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+
   afterRender() {
+    if (!this._settings) {
+      this._loadData();
+      return;
+    }
+
     // 1. Tab switches
     const tabProfile = document.getElementById('tab-profile-btn');
     const tabRules = document.getElementById('tab-rules-btn');
@@ -166,13 +206,7 @@ export const settingsPage = {
   },
 
   async refresh() {
-    const mainView = document.getElementById('main-view');
-    if (mainView) {
-      mainView.innerHTML = await this.render();
-      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
-        window.app.updateBreadcrumbs('settings');
-      }
-      this.afterRender();
-    }
+    this._settings = null;
+    await this._loadData();
   }
 };

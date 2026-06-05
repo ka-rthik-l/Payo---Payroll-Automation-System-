@@ -78,6 +78,7 @@ async function request(method, path, options = {}) {
   }
 
   let res;
+  const startTime = performance.now();
   try {
     res = await fetch(url, init);
   } catch {
@@ -87,6 +88,8 @@ async function request(method, path, options = {}) {
       'NETWORK_ERROR'
     );
   }
+  const endTime = performance.now();
+  console.log(`[API_TIME] ${method} ${path} took ${(endTime - startTime).toFixed(2)}ms`);
 
   if (raw) {
     if (!res.ok) {

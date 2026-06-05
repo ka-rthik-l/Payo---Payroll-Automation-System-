@@ -4,8 +4,12 @@ import { pdfService } from '../services/pdfService.js';
 import { settingsService } from '../services/settingsService.js';
 import { drawer } from '../components/drawer.js';
 import { toast } from '../components/toast.js';
+import { state as appState } from '../state.js';
 
 export const employeesPage = {
+  _data: null,
+  _departments: null,
+
   // Store local search and filter states
   state: {
     search: '',
@@ -13,9 +17,42 @@ export const employeesPage = {
   },
 
   async render() {
-    // 1. Fetch filtered employees and department list
-    const employees = await employeeService.getEmployees(this.state.search, this.state.department);
-    const departments = await employeeService.getDepartments();
+    if (!this._data || !this._departments) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Employee Directory</h1>
+                <p class="page-header-subtitle">Manage active employee files and contact directories</p>
+              </div>
+              <button class="btn btn-primary" id="add-employee-btn" disabled>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:18px; height:18px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                Add Employee
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <div class="table-controls">
+              <div class="skeleton" style="width: 320px; height: 38px;"></div>
+              <div class="skeleton" style="width: 180px; height: 38px;"></div>
+            </div>
+            <div style="padding: 20px;">
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const employees = this._data;
+    const departments = this._departments;
 
     // Generate table content or empty state
     let tableBodyHtml = '';
@@ -107,7 +144,34 @@ export const employeesPage = {
     `;
   },
 
+  async _loadData() {
+    try {
+      const [employees, departments] = await Promise.all([
+        employeeService.getEmployees(this.state.search, this.state.department),
+        employeeService.getDepartments()
+      ]);
+      this._data = employees;
+      this._departments = departments;
+
+      const mainView = document.getElementById('main-view');
+      if (mainView && appState.currentView === 'employees') {
+        mainView.innerHTML = await this.render();
+        if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+          window.app.updateBreadcrumbs('employees');
+        }
+        this.afterRender();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+
   afterRender() {
+    if (!this._data || !this._departments) {
+      this._loadData();
+      return;
+    }
+
     // 1. Search filter event
     const searchInput = document.getElementById('emp-search');
     if (searchInput) {
@@ -169,14 +233,8 @@ export const employeesPage = {
   },
 
   async refresh() {
-    const mainView = document.getElementById('main-view');
-    if (mainView) {
-      mainView.innerHTML = await this.render();
-      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
-        window.app.updateBreadcrumbs('employees');
-      }
-      this.afterRender();
-    }
+    this._data = null; // Invalidate current data so we refetch
+    await this._loadData();
   },
 
   _openAddEmployeeDrawer() {

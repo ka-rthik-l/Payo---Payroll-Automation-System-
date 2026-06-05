@@ -8,26 +8,29 @@ import { toast } from '../components/toast.js';
 
 export const payrollRunPage = {
   _loadingRun: null,
+  _isDataLoaded: false,
 
   async render() {
-    await this._ensureRunLoaded();
-    if (state.activeRunStep >= 4 && state.currentRunData.calculatedPayroll.length === 0 && state.currentRunData.runId) {
-      try {
-        const calc = await payrollService.calculateRun(state.currentRunData.runId);
-        state.patchRunData({ calculatedPayroll: calc.payroll });
-      } catch {
-        // Run may already be finalized; payslip hydration handles completed runs.
-      }
-    }
-    await this._hydrateCalculatedPayrollIfNeeded();
+    if (!this._isDataLoaded) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Payroll Run Center</h1>
+                <p class="page-header-subtitle">Execute batch salary processing</p>
+              </div>
+            </div>
+          </div>
 
-    if (state.activeRunStep === 3 && state.currentRunData.validationReport.length === 0 && state.currentRunData.runId) {
-      try {
-        const { report } = await payrollService.validateRun(state.currentRunData.runId);
-        state.patchRunData({ validationReport: report });
-      } catch {
-        // Validation will run when the user advances from step 2.
-      }
+          <div style="display:flex; flex-direction:column; gap:var(--spacing-6); width:100%;">
+            <!-- Main Wizard Canvas -->
+            <div class="card wizard-card skeleton" style="width:100%; height: 400px;">
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     const currentStep = state.activeRunStep;
@@ -443,7 +446,49 @@ export const payrollRunPage = {
   /* ==========================================================================
      INTERACTIONS & BINDINGS (afterRender)
      ========================================================================== */
+  async _loadData() {
+    try {
+      await this._ensureRunLoaded();
+      if (state.activeRunStep >= 4 && state.currentRunData.calculatedPayroll.length === 0 && state.currentRunData.runId) {
+        try {
+          const calc = await payrollService.calculateRun(state.currentRunData.runId);
+          state.patchRunData({ calculatedPayroll: calc.payroll });
+        } catch {
+          // Run may already be finalized; payslip hydration handles completed runs.
+        }
+      }
+      await this._hydrateCalculatedPayrollIfNeeded();
+
+      if (state.activeRunStep === 3 && state.currentRunData.validationReport.length === 0 && state.currentRunData.runId) {
+        try {
+          const { report } = await payrollService.validateRun(state.currentRunData.runId);
+          state.patchRunData({ validationReport: report });
+        } catch {
+          // Validation will run when the user advances from step 2.
+        }
+      }
+
+      this._isDataLoaded = true;
+
+      const mainView = document.getElementById('main-view');
+      if (mainView && state.currentView === 'payroll') {
+        mainView.innerHTML = await this.render();
+        if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+          window.app.updateBreadcrumbs('payroll');
+        }
+        this.afterRender();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+
   afterRender() {
+    if (!this._isDataLoaded) {
+      this._loadData();
+      return;
+    }
+
     const deleteBtn = document.getElementById('delete-run-btn');
     if (deleteBtn) {
       deleteBtn.onclick = () => this._handleDeleteRun();
@@ -971,7 +1016,7 @@ export const payrollRunPage = {
 
   async refresh() {
     const mainView = document.getElementById('main-view');
-    if (mainView) {
+    if (mainView && state.currentView === 'payroll') {
       mainView.innerHTML = await this.render();
       if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
         window.app.updateBreadcrumbs('payroll');

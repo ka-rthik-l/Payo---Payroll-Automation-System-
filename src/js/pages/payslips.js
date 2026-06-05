@@ -3,8 +3,11 @@ import { payrollService } from '../services/payrollService.js';
 import { pdfService } from '../services/pdfService.js';
 import { drawer } from '../components/drawer.js';
 import { toast } from '../components/toast.js';
+import { state as appState } from '../state.js';
 
 export const payslipsPage = {
+  _allPayslips: null,
+
   state: {
     search: '',
     period: ''
@@ -29,7 +32,35 @@ export const payslipsPage = {
   },
 
   async render() {
-    const allPayslips = await payrollService.getAllPayslips();
+    if (!this._allPayslips) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Payslips Registry</h1>
+                <p class="page-header-subtitle">View generated salary receipts and export printable documents</p>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <div class="table-controls">
+              <div class="skeleton" style="width: 320px; height: 38px;"></div>
+              <div class="skeleton" style="width: 180px; height: 38px;"></div>
+            </div>
+            <div style="padding: 20px;">
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const allPayslips = this._allPayslips;
     const payslips = this._filterPayslips(allPayslips);
 
     const periods = [...new Set(allPayslips.map((p) => `${p.month}|${p.year}`))]
@@ -128,7 +159,28 @@ export const payslipsPage = {
     `;
   },
 
+  async _loadData() {
+    try {
+      this._allPayslips = await payrollService.getAllPayslips();
+      const mainView = document.getElementById('main-view');
+      if (mainView && appState.currentView === 'payslips') {
+        mainView.innerHTML = await this.render();
+        if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+          window.app.updateBreadcrumbs('payslips');
+        }
+        this.afterRender();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+
   afterRender() {
+    if (!this._allPayslips) {
+      this._loadData();
+      return;
+    }
+
     const searchInput = document.getElementById('ps-search');
     if (searchInput) {
       let searchTimeout;
@@ -326,7 +378,7 @@ export const payslipsPage = {
 
   async refresh() {
     const mainView = document.getElementById('main-view');
-    if (mainView) {
+    if (mainView && appState.currentView === 'payslips') {
       mainView.innerHTML = await this.render();
       if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
         window.app.updateBreadcrumbs('payslips');

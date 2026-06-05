@@ -621,3 +621,50 @@
   z-index: 50;
   border-radius: inherit;
 }
+
+/* 10. Skeleton Loader */
+.skeleton {
+  background: var(--neutral-200);
+  background: linear-gradient(
+    110deg,
+    var(--neutral-100) 8%,
+    var(--neutral-200) 18%,
+    var(--neutral-100) 33%
+  );
+  background-size: 200% 100%;
+  animation: 1.5s shimmer linear infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.skeleton-text:last-child {
+  margin-bottom: 0;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.skeleton-card {
+  height: 120px;
+  width: 100%;
+}
+
+.skeleton-table-row {
+  height: 48px;
+  margin-bottom: 8px;
+  width: 100%;
+}

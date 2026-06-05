@@ -4,8 +4,36 @@ import { pdfService } from '../services/pdfService.js';
 import { state } from '../state.js';
 
 export const dashboardPage = {
+  _data: null,
+
   async render() {
-    const metrics = await dashboardService.getMetrics();
+    if (!this._data) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Dashboard</h1>
+                <p class="page-header-subtitle">Overview of payroll operations and metrics</p>
+              </div>
+            </div>
+          </div>
+          <div class="card skeleton" style="height: 140px; margin-bottom: var(--spacing-8);"></div>
+          <div class="dashboard-metrics-grid" style="margin-bottom: var(--spacing-8);">
+            <div class="card skeleton skeleton-card"></div>
+            <div class="card skeleton skeleton-card"></div>
+            <div class="card skeleton skeleton-card"></div>
+          </div>
+          <div class="dashboard-activity-grid">
+            <div class="card skeleton skeleton-card" style="height: 250px;"></div>
+            <div class="card skeleton skeleton-card" style="height: 250px;"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    const metrics = this._data;
     const {
       activeEmployeesCount,
       totalPayrollPaid,
@@ -194,7 +222,24 @@ export const dashboardPage = {
     `;
   },
 
+  async _loadData() {
+    this._data = await dashboardService.getMetrics();
+    const mainView = document.getElementById('main-view');
+    if (mainView && state.currentView === 'dashboard') {
+      mainView.innerHTML = await this.render();
+      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+        window.app.updateBreadcrumbs('dashboard');
+      }
+      this.afterRender();
+    }
+  },
+
   afterRender() {
+    if (!this._data) {
+      this._loadData();
+      return;
+    }
+
     const startRunBtn = document.getElementById('dashboard-start-run-btn');
     if (startRunBtn) {
       startRunBtn.onclick = () => {

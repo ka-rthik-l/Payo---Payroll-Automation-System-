@@ -1,17 +1,50 @@
 /* Email Center Page View for Payo */
 import { emailService } from '../services/emailService.js';
 import { toast } from '../components/toast.js';
+import { state as appState } from '../state.js';
 
 export const emailsPage = {
+  _logs: null,
+  _metrics: null,
+
   state: {
     statusFilter: ''
   },
 
   async render() {
-    const [logs, metrics] = await Promise.all([
-      emailService.getEmailLogs(this.state.statusFilter),
-      emailService.getEmailMetrics()
-    ]);
+    if (!this._logs || !this._metrics) {
+      return `
+        <div>
+          <div class="page-header">
+            <nav class="breadcrumbs" id="breadcrumb-list"></nav>
+            <div class="page-header-title-row">
+              <div>
+                <h1 class="page-header-title">Email Center</h1>
+                <p class="page-header-subtitle">Track and manage payslip email dispatches</p>
+              </div>
+            </div>
+          </div>
+          <div class="email-delivery-summary" style="margin-bottom: var(--spacing-8); display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-4);">
+            <div class="skeleton" style="height: 100px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 100px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 100px; border-radius: var(--radius-lg);"></div>
+          </div>
+          <div class="table-container">
+            <div class="table-controls" style="justify-content: flex-start; gap:var(--spacing-6);">
+              <div class="skeleton" style="width: 250px; height: 32px;"></div>
+            </div>
+            <div style="padding: 20px;">
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+              <div class="skeleton skeleton-table-row"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const logs = this._logs;
+    const metrics = this._metrics;
 
     const sentCount = metrics.delivered;
     const pendingCount = metrics.pending;
@@ -145,7 +178,33 @@ export const emailsPage = {
     `;
   },
 
+  async _loadData() {
+    try {
+      const [logs, metrics] = await Promise.all([
+        emailService.getEmailLogs(this.state.statusFilter),
+        emailService.getEmailMetrics()
+      ]);
+      this._logs = logs;
+      this._metrics = metrics;
+      const mainView = document.getElementById('main-view');
+      if (mainView && appState.currentView === 'emails') {
+        mainView.innerHTML = await this.render();
+        if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
+          window.app.updateBreadcrumbs('emails');
+        }
+        this.afterRender();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  },
+
   afterRender() {
+    if (!this._logs || !this._metrics) {
+      this._loadData();
+      return;
+    }
+
     // 1. Tab filters bindings
     const bindFilter = (elementId, value) => {
       const el = document.getElementById(elementId);
@@ -200,13 +259,7 @@ export const emailsPage = {
   },
 
   async refresh() {
-    const mainView = document.getElementById('main-view');
-    if (mainView) {
-      mainView.innerHTML = await this.render();
-      if (window.app && typeof window.app.updateBreadcrumbs === 'function') {
-        window.app.updateBreadcrumbs('emails');
-      }
-      this.afterRender();
-    }
+    this._logs = null;
+    await this._loadData();
   }
 };
