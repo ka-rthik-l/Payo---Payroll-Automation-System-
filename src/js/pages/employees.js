@@ -56,10 +56,12 @@ export const employeesPage = {
 
     // Generate table content or empty state
     let tableBodyHtml = '';
+    let mobileCardsHtml = '';
+
     if (employees.length === 0) {
       tableBodyHtml = `
         <tr>
-          <td colspan="5" style="padding:0;">
+          <td colspan="6" style="padding:0;">
             <div class="empty-state" style="border:none;">
               <div class="empty-state-icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -69,6 +71,15 @@ export const employeesPage = {
             </div>
           </td>
         </tr>
+      `;
+      mobileCardsHtml = `
+        <div class="empty-state" style="border-radius:0; border:none;">
+          <div class="empty-state-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          </div>
+          <div class="empty-state-title">No employees found</div>
+          <div class="empty-state-description">Try adjusting your filters or add a new employee profile.</div>
+        </div>
       `;
     } else {
       tableBodyHtml = employees.map(emp => `
@@ -85,6 +96,40 @@ export const employeesPage = {
           </td>
         </tr>
       `).join('');
+
+      mobileCardsHtml = employees.map(emp => {
+        const initials = emp.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        return `
+          <div class="mobile-data-card employee-row" data-id="${emp.id}">
+            <div class="mobile-data-card__header">
+              <div style="display:flex; align-items:center; gap:var(--spacing-3); min-width:0;">
+                <div class="mobile-emp-avatar">${initials}</div>
+                <div style="min-width:0;">
+                  <div class="mobile-data-card__title">${emp.name}</div>
+                  <div class="mobile-data-card__value--mono" style="margin-top:2px;">${emp.id}</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-ghost delete-emp-btn action-cell" data-id="${emp.id}" title="Remove Employee" style="flex-shrink:0;">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:15px; height:15px; color:var(--danger-500);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              </button>
+            </div>
+            <div class="mobile-data-card__body">
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Department</span>
+                <span class="badge badge-neutral" style="margin-top:2px;">${emp.department}</span>
+              </div>
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Role</span>
+                <span class="mobile-data-card__value">${emp.role}</span>
+              </div>
+              <div class="mobile-data-card__field" style="flex-basis:100%;">
+                <span class="mobile-data-card__label">Email</span>
+                <span class="mobile-data-card__value" style="font-size:var(--text-xs); color:var(--text-secondary);">${emp.email}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     return `
@@ -121,7 +166,7 @@ export const employeesPage = {
             </div>
           </div>
 
-          <!-- Employees Table -->
+          <!-- Employees Desktop Table -->
           <div class="table-scroll">
             <table class="data-table">
               <thead>
@@ -138,6 +183,11 @@ export const employeesPage = {
                 ${tableBodyHtml}
               </tbody>
             </table>
+          </div>
+
+          <!-- Employees Mobile Card List -->
+          <div class="mobile-card-list" id="emp-mobile-list">
+            ${mobileCardsHtml}
           </div>
         </div>
       </div>

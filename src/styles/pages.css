@@ -1,24 +1,24 @@
-/* Page-Specific Styles for Payo */
+/* Page-Specific Styles for Payo — Mobile-First */
 
-/* ==========================================================================
-   1. Dashboard Page
-   ========================================================================== */
+/* ============================================================
+   1. DASHBOARD PAGE
+   ============================================================ */
 .dashboard-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--spacing-6);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
   align-items: stretch;
 }
 
 .dashboard-activity-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
   align-items: start;
 }
 
 .metric-card {
-  min-height: 190px;
+  min-height: 160px;
   transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -42,6 +42,7 @@
   gap: var(--spacing-2);
   font-size: var(--text-xs);
   color: var(--text-muted);
+  flex-wrap: wrap;
 }
 
 .metric-trend {
@@ -58,25 +59,11 @@
   border: 1px solid var(--primary-200);
 }
 
-/* ==========================================================================
-   2. Payroll Run Center (Mission Control)
-   ========================================================================== */
-.run-center-grid {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: var(--spacing-8);
-  align-items: start;
-}
-
-@media (max-width: 1024px) {
-  .run-center-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Step Wizard Card Content */
+/* ============================================================
+   2. PAYROLL RUN CENTER
+   ============================================================ */
 .wizard-card {
-  min-height: 480px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
 }
@@ -87,24 +74,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-8) 0;
+  padding: var(--spacing-6) var(--spacing-4);
+  width: 100%;
 }
 
 .wizard-footer {
   border-top: 1px solid var(--neutral-200);
-  padding-top: var(--spacing-6);
+  padding-top: var(--spacing-4);
   display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: var(--spacing-3);
 }
 
 /* Upload Stage Layout */
 .upload-dropzone {
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   border: 2px dashed var(--neutral-300);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-10) var(--spacing-6);
+  padding: var(--spacing-8) var(--spacing-5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,7 +103,8 @@
   background-color: var(--neutral-50);
 }
 
-.upload-dropzone:hover, .upload-dropzone.dragover {
+.upload-dropzone:hover,
+.upload-dropzone.dragover {
   border-color: var(--primary-500);
   background-color: var(--primary-50);
 }
@@ -139,6 +129,8 @@
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--neutral-800);
+  word-break: break-all;
+  text-align: center;
 }
 
 .upload-template-btn {
@@ -157,21 +149,21 @@
   text-decoration: underline;
 }
 
-/* Validation Reports Stage */
+/* Validation Reports */
 .validation-list {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
-  max-height: 320px;
+  max-height: 300px;
   overflow-y: auto;
-  padding-right: var(--spacing-2);
+  padding-right: var(--spacing-1);
 }
 
 .validation-item {
   display: flex;
   gap: var(--spacing-3);
-  padding: var(--spacing-4);
+  padding: var(--spacing-3);
   background-color: var(--surface-sunken);
   border: 1px solid var(--surface-sunken-border);
   border-radius: var(--radius-md);
@@ -196,102 +188,77 @@
   border-color: var(--status-success-border);
 }
 
-.validation-item-icon {
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
+.validation-item-icon { flex-shrink: 0; margin-top: 1px; }
 .validation-item-icon.error { color: var(--status-danger-text); }
 .validation-item-icon.warning { color: var(--status-warning-text); }
 .validation-item-icon.success { color: var(--status-success-text); }
+.validation-item-details { flex: 1; min-width: 0; }
+.validation-item-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.validation-item-desc { font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px; }
 
-.validation-item-details {
-  flex: 1;
-}
-
-.validation-item-title {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.validation-item-desc {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-/* Calculation & Summary Step */
+/* Calculation & Summary */
 .payroll-preview-layout {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-5);
   width: 100%;
 }
 
 .preview-grid-totals {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
   width: 100%;
 }
 
-@media (max-width: 768px) {
-  .preview-grid-totals {
-    grid-template-columns: 1fr;
-  }
-}
-
 .preview-total-card {
-  padding: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
   background-color: var(--surface-sunken);
   border: 1px solid var(--surface-sunken-border);
   border-radius: var(--radius-md);
 }
 
 .preview-total-label {
-  font-size: var(--text-xs);
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .preview-total-value {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-on-surface);
   margin-top: var(--spacing-1);
 }
 
-/* Sending Queue Log Board */
+/* Email sending console */
 .email-log-console {
   width: 100%;
   background-color: #0c1527;
-  color: #34d399; /* Mint color monospace */
+  color: #34d399;
   border: 1px solid var(--surface-border);
   font-family: 'Courier New', Courier, monospace;
   font-size: var(--text-xs);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-lg);
-  height: 240px;
+  height: 220px;
   overflow-y: auto;
-  box-shadow: var(--shadow-inset);
   line-height: 1.6;
+  word-break: break-all;
 }
 
-.email-log-line {
-  margin-bottom: var(--spacing-1);
-}
-
+.email-log-line { margin-bottom: var(--spacing-1); }
 .email-log-line.system { color: #64748b; }
 .email-log-line.error { color: #fca5a5; }
 .email-log-line.success { color: #34d399; }
 
-/* Activity Timeline Widget */
+/* Activity Timeline */
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
 }
 
 .timeline-item {
@@ -299,7 +266,7 @@
   gap: var(--spacing-3);
   position: relative;
   align-items: flex-start;
-  padding: var(--spacing-4);
+  padding: var(--spacing-3);
   background-color: var(--surface-sunken);
   border: 1px solid var(--surface-sunken-border);
   border-radius: var(--radius-lg);
@@ -321,23 +288,18 @@
 }
 
 .timeline-dot {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-full);
   background-color: var(--surface-active);
-  border: 4px solid var(--surface-bg);
+  border: 3px solid var(--surface-bg);
   z-index: 2;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
-.timeline-dot.active {
-  background-color: var(--primary-600);
-}
-
-.timeline-dot.completed {
-  background-color: var(--success-500);
-}
+.timeline-dot.active { background-color: var(--primary-600); }
+.timeline-dot.completed { background-color: var(--success-500); }
 
 .timeline-content {
   flex: 1;
@@ -352,16 +314,16 @@
 }
 
 .timeline-desc {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   margin-top: var(--spacing-1);
   line-height: 1.6;
   word-break: break-word;
 }
 
-/* ==========================================================================
-   3. Corporate Payslip (Print & Preview Layout)
-   ========================================================================== */
+/* ============================================================
+   3. PAYSLIP PREVIEW (Drawer / Print)
+   ============================================================ */
 .payslip-wrapper {
   max-width: 720px;
   margin: 0 auto;
@@ -373,10 +335,10 @@
 }
 
 .payslip-body-content {
-  padding: var(--spacing-8);
+  padding: var(--spacing-6);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
 }
 
 .payslip-corporate-header {
@@ -384,7 +346,7 @@
   justify-content: space-between;
   align-items: flex-start;
   border-bottom: 2px solid var(--neutral-900);
-  padding-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-5);
 }
 
 .payslip-company-info {
@@ -394,7 +356,7 @@
 }
 
 .payslip-company-name {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 800;
   color: var(--neutral-900);
   letter-spacing: -0.02em;
@@ -408,19 +370,19 @@
 }
 
 .payslip-title-text {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 800;
   color: var(--neutral-900);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .payslip-details-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-6) var(--spacing-12);
+  gap: var(--spacing-4) var(--spacing-8);
   background-color: var(--neutral-50);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--neutral-200);
 }
@@ -433,25 +395,19 @@
   padding-bottom: var(--spacing-2);
 }
 
-.payslip-detail-col:last-child, .payslip-detail-col:nth-last-child(2) {
+.payslip-detail-col:last-child,
+.payslip-detail-col:nth-last-child(2) {
   border-bottom: none;
   padding-bottom: 0;
 }
 
-.payslip-detail-label {
-  font-weight: 600;
-  color: var(--neutral-500);
-}
-
-.payslip-detail-val {
-  font-weight: 700;
-  color: var(--neutral-800);
-}
+.payslip-detail-label { font-weight: 600; color: var(--neutral-500); }
+.payslip-detail-val { font-weight: 700; color: var(--neutral-800); }
 
 .payslip-financial-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
 }
 
 .payslip-table-wrapper {
@@ -495,15 +451,16 @@
 .payslip-net-highlight-banner {
   background: linear-gradient(135deg, var(--highlight-strong) 0%, var(--highlight-strong-soft) 100%);
   color: var(--highlight-contrast);
-  padding: var(--spacing-6);
+  padding: var(--spacing-5);
   border-radius: var(--radius-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-4);
 }
 
 .payslip-net-label {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--primary-200);
   text-transform: uppercase;
@@ -515,6 +472,7 @@
   font-weight: 800;
   color: var(--highlight-contrast);
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .payslip-net-word {
@@ -527,13 +485,13 @@
 .payslip-signature-area {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--spacing-6);
-  padding-top: var(--spacing-8);
+  margin-top: var(--spacing-4);
+  padding-top: var(--spacing-6);
   border-top: 1px dashed var(--neutral-300);
 }
 
 .payslip-sig-box {
-  width: 200px;
+  width: 160px;
   text-align: center;
   font-size: var(--text-xs);
   color: var(--neutral-500);
@@ -541,33 +499,28 @@
 
 .payslip-sig-line {
   border-top: 1px solid var(--neutral-400);
-  margin-top: var(--spacing-10);
+  margin-top: var(--spacing-8);
   padding-top: var(--spacing-2);
 }
 
-/* Payslip Drawer Enhancements
-   ────────────────────────────────────────────────────────── */
-
-/* Scroll container inside the drawer body */
+/* Payslip Drawer Enhancements */
 .payslip-drawer-doc {
   padding: var(--spacing-2) 0 var(--spacing-4);
 }
 
-/* Gradient top accent bar */
 .payslip-accent-bar {
   height: 5px;
   background: linear-gradient(90deg, var(--primary-700) 0%, var(--primary-500) 55%, #a78bfa 100%);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-/* Company monogram badge */
 .payslip-monogram {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--primary-600), var(--primary-900));
-  color: var(--highlight-contrast);
-  font-size: var(--text-xl);
+  color: #ffffff;
+  font-size: var(--text-base);
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -577,11 +530,10 @@
   box-shadow: 0 2px 8px rgba(99,102,241,0.30);
 }
 
-/* Period pill badge */
 .payslip-period-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 12px;
+  padding: 3px 10px;
   background-color: var(--period-bg);
   color: var(--period-text);
   border: 1px solid var(--period-border);
@@ -592,7 +544,6 @@
   white-space: nowrap;
 }
 
-/* Section title row with dot indicator */
 .payslip-section-header {
   display: flex;
   align-items: center;
@@ -606,16 +557,13 @@
   flex-shrink: 0;
 }
 
-.earnings-dot   { background-color: var(--success-500); }
+.earnings-dot { background-color: var(--success-500); }
 .deductions-dot { background-color: var(--danger-500); }
 
-/* Subtle row hover on financial tables */
 .payslip-fin-table tr:not(.total-row):hover td {
   background-color: var(--neutral-50);
-  transition: background-color var(--transition-fast);
 }
 
-/* Computer-generated stamp in signature row */
 .payslip-footer-stamp {
   display: flex;
   flex-direction: column;
@@ -625,17 +573,13 @@
   color: var(--neutral-500);
   font-style: italic;
   text-align: center;
-  padding-top: var(--spacing-10);
+  padding-top: var(--spacing-8);
 }
 
-/* Print CSS Configurations */
+/* Print CSS */
 @media print {
-  body * {
-    visibility: hidden;
-  }
-  .payslip-wrapper, .payslip-wrapper * {
-    visibility: visible;
-  }
+  body * { visibility: hidden; }
+  .payslip-wrapper, .payslip-wrapper * { visibility: visible; }
   .payslip-wrapper {
     position: absolute;
     left: 0;
@@ -652,23 +596,24 @@
   }
 }
 
-/* ==========================================================================
-   4. Email Center & Settings
-   ========================================================================== */
+/* ============================================================
+   4. EMAIL CENTER
+   ============================================================ */
 .email-delivery-summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-6);
+  gap: var(--spacing-4);
 }
 
 .email-stat-card {
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-4);
   border-radius: var(--radius-md);
   background-color: var(--surface-bg);
   border: 1px solid var(--surface-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-3);
   transition: box-shadow var(--transition-fast);
 }
 
@@ -676,17 +621,24 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Email stat card value text uses --text-primary to be theme-aware */
 .email-stat-value {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: 800;
   color: var(--text-primary);
   margin-top: 4px;
+  line-height: 1;
 }
 
+/* ============================================================
+   5. SETTINGS PAGE
+   ============================================================ */
 .settings-tab-container {
   display: flex;
   gap: var(--spacing-8);
+}
+
+.settings-card {
+  padding: var(--spacing-7) var(--spacing-8);
 }
 
 .settings-tabs-list {
@@ -694,6 +646,7 @@
   flex-direction: column;
   width: 200px;
   gap: var(--spacing-2);
+  flex-shrink: 0;
 }
 
 .settings-tab-btn {
@@ -707,6 +660,7 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .settings-tab-btn:hover {
@@ -728,13 +682,14 @@
 .settings-tab-panel.active {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-5);
 }
 
 .settings-panel {
   flex: 1;
   border-left: 1px solid var(--surface-border);
   padding-left: var(--spacing-8);
+  min-width: 0;
 }
 
 .settings-panel-title {
@@ -748,7 +703,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  max-width: 560px;
+  max-width: 520px;
 }
 
 .settings-info-grid {
@@ -764,8 +719,130 @@
   padding: var(--spacing-4);
 }
 
+/* ============================================================
+   RESPONSIVE — Pages (≤ 768px)
+   ============================================================ */
 @media (max-width: 768px) {
-  .settings-tab-container {
+  /* Dashboard */
+  .dashboard-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .dashboard-activity-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .metric-card {
+    min-height: 130px;
+  }
+
+  .metric-value {
+    font-size: var(--text-2xl);
+  }
+
+  /* Payroll */
+  .wizard-card {
+    min-height: auto;
+  }
+
+  .wizard-body {
+    padding: var(--spacing-5) var(--spacing-3);
+    align-items: stretch;
+  }
+
+  .wizard-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-2);
+  }
+
+  .wizard-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .upload-dropzone {
+    max-width: 100%;
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+
+  .preview-grid-totals {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .preview-total-value {
+    font-size: var(--text-base);
+  }
+
+  .email-log-console {
+    font-size: 11px;
+    padding: var(--spacing-3);
+    height: 180px;
+  }
+
+  /* Timeline */
+  .timeline-item {
+    padding: var(--spacing-3);
+  }
+
+  /* Payslip drawer */
+  .payslip-corporate-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .payslip-financial-split {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .payslip-net-highlight-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .payslip-signature-area {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .payslip-sig-box {
+    width: 100%;
+  }
+
+  .payslip-details-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .payslip-body-content {
+    padding: var(--spacing-4);
+    gap: var(--spacing-4);
+  }
+
+  /* Email center */
+  .email-delivery-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .email-stat-card {
+    padding: var(--spacing-3);
+  }
+
+  .email-stat-value {
+    font-size: var(--text-xl);
+  }
+
+  /* Settings */
+  .settings-card {
+    padding: var(--spacing-5) var(--spacing-5);
+  }
+
   .settings-tab-container {
     flex-direction: column;
     gap: var(--spacing-4);
@@ -775,101 +852,71 @@
     flex-direction: row;
     width: 100%;
     overflow-x: auto;
+    padding-bottom: var(--spacing-1);
+    scrollbar-width: none;
   }
 
-  .settings-tab-btn {
-    white-space: nowrap;
+  .settings-tabs-list::-webkit-scrollbar {
+    display: none;
   }
 
-  .settings-tab-container > div:last-child {
-    border-left: none !important;
-    padding-left: 0 !important;
-    border-top: 1px solid var(--neutral-200);
+  .settings-panel {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--surface-border);
     padding-top: var(--spacing-4);
   }
-}
 
-@media (max-width: 768px) {
-  .run-center-grid {
-    grid-template-columns: 1fr;
+  .settings-panel-form {
+    max-width: none;
   }
 
-  .wizard-card {
+  .settings-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — Small Mobile (≤ 430px)
+   ============================================================ */
+@media (max-width: 430px) {
+  /* Dashboard — single column */
+  .dashboard-metrics-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .metric-card {
     min-height: auto;
+    padding: var(--spacing-4);
   }
 
-  .wizard-footer {
-    flex-direction: column;
-    align-items: stretch;
+  .metric-value {
+    font-size: var(--text-xl);
+  }
+
+  /* Payroll — full width wizard items */
+  .payroll-preview-layout {
     gap: var(--spacing-3);
   }
 
-  .upload-dropzone {
-    padding: var(--spacing-8) var(--spacing-4);
-  }
-
-  .email-log-console {
-    max-height: 320px;
-  }
-
-  .timeline-item {
-    display: flex;
-    gap: var(--spacing-3);
-    align-items: flex-start;
-    padding: var(--spacing-3) 0;
-  }
-
-  .timeline-content {
-    min-width: 0;
-  }
-
-  .timeline-title,
-  .timeline-desc {
-    word-wrap: break-word;
-    white-space: normal;
-  }
-
-  .timeline-desc {
-    margin-top: var(--spacing-2);
-    line-height: 1.6;
-  }
-
-  .timeline-item::after {
-    left: 10px;
-    top: 30px;
-    bottom: 16px;
-  }
-
-  .dashboard-activity-grid {
+  .preview-grid-totals {
     grid-template-columns: 1fr;
   }
 
-  .dashboard-activity-grid > .card {
-    width: 100%;
-  }
-
-  .email-delivery-summary,
-  .payslip-details-grid,
-  .payslip-financial-split {
+  /* Email — single column stat cards */
+  .email-delivery-summary {
     grid-template-columns: 1fr;
+    gap: var(--spacing-2);
   }
 
-  .payslip-corporate-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-4);
+  .email-stat-card {
+    padding: var(--spacing-3) var(--spacing-4);
   }
 
-  .payslip-net-highlight-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-4);
-  }
-
-  .payslip-signature-area {
-    flex-direction: column;
-    gap: var(--spacing-4);
+  /* Settings — full-width buttons */
+  .settings-tab-btn {
+    font-size: var(--text-xs);
+    padding: var(--spacing-2) var(--spacing-3);
   }
 }
-
-

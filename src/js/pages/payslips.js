@@ -71,6 +71,8 @@ export const payslipsPage = {
       });
 
     let tableBodyHtml = '';
+    let mobileCardsHtml = '';
+
     if (payslips.length === 0) {
       tableBodyHtml = `
         <tr>
@@ -84,6 +86,15 @@ export const payslipsPage = {
             </div>
           </td>
         </tr>
+      `;
+      mobileCardsHtml = `
+        <div class="empty-state" style="border-radius:0; border:none;">
+          <div class="empty-state-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          </div>
+          <div class="empty-state-title">No payslips found</div>
+          <div class="empty-state-description">Perform a payroll run or adjust filters.</div>
+        </div>
       `;
     } else {
       tableBodyHtml = payslips.map(ps => `
@@ -102,6 +113,45 @@ export const payslipsPage = {
           </td>
         </tr>
       `).join('');
+
+      mobileCardsHtml = payslips.map(ps => {
+        const initials = ps.employeeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        const gross = (ps.baseSalary || 0) + (ps.hra || 0) + (ps.allowances || 0);
+        return `
+          <div class="mobile-data-card payslip-row" data-id="${ps.id}">
+            <div class="mobile-data-card__header">
+              <div style="display:flex; align-items:center; gap:var(--spacing-3); min-width:0;">
+                <div class="mobile-emp-avatar" style="background-color:var(--primary-50); color:var(--primary-700);">${initials}</div>
+                <div style="min-width:0;">
+                  <div class="mobile-data-card__title">${ps.employeeName}</div>
+                  <div class="mobile-data-card__value--mono" style="margin-top:2px;">${ps.employeeId}</div>
+                </div>
+              </div>
+              <span class="payslip-period-badge">${ps.month} ${ps.year}</span>
+            </div>
+            <div class="mobile-data-card__body">
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Gross</span>
+                <span class="mobile-data-card__value" style="font-weight:700;">${pdfService.formatCurrency(gross)}</span>
+              </div>
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Deductions</span>
+                <span class="mobile-data-card__value" style="color:var(--danger-600); font-weight:600;">-${pdfService.formatCurrency(ps.deductions || 0)}</span>
+              </div>
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Net Pay</span>
+                <span class="mobile-data-card__value" style="color:var(--primary-700); font-weight:800; font-size:var(--text-sm);">${pdfService.formatCurrency(ps.netSalary)}</span>
+              </div>
+            </div>
+            <div class="mobile-data-card__actions">
+              <button class="btn btn-sm btn-secondary view-payslip-btn" data-id="${ps.id}" style="width:100%;">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px; height:14px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                View Payslip
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     return `
@@ -136,6 +186,7 @@ export const payslipsPage = {
             </div>
           </div>
 
+          <!-- Desktop Table -->
           <div class="table-scroll">
             <table class="data-table">
               <thead>
@@ -153,6 +204,11 @@ export const payslipsPage = {
                 ${tableBodyHtml}
               </tbody>
             </table>
+          </div>
+
+          <!-- Mobile Card List -->
+          <div class="mobile-card-list" id="ps-mobile-list">
+            ${mobileCardsHtml}
           </div>
         </div>
       </div>

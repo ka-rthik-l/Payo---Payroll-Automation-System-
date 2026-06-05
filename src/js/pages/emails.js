@@ -51,6 +51,8 @@ export const emailsPage = {
     const failedCount = metrics.failed;
 
     let tableBodyHtml = '';
+    let mobileCardsHtml = '';
+
     if (logs.length === 0) {
       tableBodyHtml = `
         <tr>
@@ -64,6 +66,15 @@ export const emailsPage = {
             </div>
           </td>
         </tr>
+      `;
+      mobileCardsHtml = `
+        <div class="empty-state" style="border-radius:0; border:none;">
+          <div class="empty-state-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          </div>
+          <div class="empty-state-title">No email logs found</div>
+          <div class="empty-state-description">Perform a payroll run to start sending employee payslips.</div>
+        </div>
       `;
     } else {
       tableBodyHtml = logs.map(log => {
@@ -91,6 +102,53 @@ export const emailsPage = {
               ` : '-'}
             </td>
           </tr>
+        `;
+      }).join('');
+
+      mobileCardsHtml = logs.map(log => {
+        let badgeClass = 'badge-neutral';
+        if (log.status === 'delivered') badgeClass = 'badge-success';
+        else if (log.status === 'failed') badgeClass = 'badge-danger';
+        else if (log.status === 'sending') badgeClass = 'badge-info';
+
+        const showRetry = log.status === 'failed';
+        const initials = log.employeeName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+
+        return `
+          <div class="mobile-data-card">
+            <div class="mobile-data-card__header">
+              <div style="display:flex; align-items:center; gap:var(--spacing-3); min-width:0;">
+                <div class="mobile-emp-avatar">${initials}</div>
+                <div style="min-width:0;">
+                  <div class="mobile-data-card__title">${log.employeeName}</div>
+                  <div style="font-size:11px; color:var(--text-secondary); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${log.recipient}</div>
+                </div>
+              </div>
+              <span class="badge ${badgeClass}" style="flex-shrink:0;">${log.status}</span>
+            </div>
+            <div class="mobile-data-card__body">
+              <div class="mobile-data-card__field" style="flex-basis:100%;">
+                <span class="mobile-data-card__label">Subject</span>
+                <span class="mobile-data-card__value" style="color:var(--text-secondary); font-size:var(--text-xs);">${log.subject}</span>
+              </div>
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Sent at</span>
+                <span class="mobile-data-card__value--mono">${log.timestamp}</span>
+              </div>
+              <div class="mobile-data-card__field">
+                <span class="mobile-data-card__label">Attempts</span>
+                <span class="mobile-data-card__value">${log.attempts}</span>
+              </div>
+            </div>
+            ${showRetry ? `
+              <div class="mobile-data-card__actions">
+                <button class="btn btn-sm btn-secondary retry-single-btn" data-id="${log.id}" style="width:100%;">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:12px; height:12px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18" /></svg>
+                  Retry Delivery
+                </button>
+              </div>
+            ` : ''}
+          </div>
         `;
       }).join('');
     }
@@ -155,6 +213,7 @@ export const emailsPage = {
             </div>
           </div>
 
+          <!-- Desktop Table -->
           <div class="table-scroll">
             <table class="data-table">
               <thead>
@@ -172,6 +231,11 @@ export const emailsPage = {
                 ${tableBodyHtml}
               </tbody>
             </table>
+          </div>
+
+          <!-- Mobile Card List -->
+          <div class="mobile-card-list" id="email-mobile-list">
+            ${mobileCardsHtml}
           </div>
         </div>
       </div>

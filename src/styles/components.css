@@ -1,6 +1,8 @@
-/* Reusable UI Components for Payo */
+/* Reusable UI Components for Payo — Mobile-First */
 
-/* 1. Buttons */
+/* ============================================================
+   1. BUTTONS
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -17,6 +19,8 @@
   transition: all var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-sm {
@@ -29,7 +33,7 @@
 .btn-primary {
   background-color: var(--primary-600);
   border-color: var(--primary-600);
-  color: var(--on-primary);
+  color: #ffffff;
 }
 
 .btn-primary:hover {
@@ -43,9 +47,9 @@
 }
 
 .btn-primary:disabled {
-  background-color: var(--primary-200);
-  border-color: var(--primary-200);
-  color: var(--neutral-400);
+  background-color: var(--neutral-300);
+  border-color: var(--neutral-300);
+  color: var(--neutral-500);
   cursor: not-allowed;
 }
 
@@ -71,8 +75,7 @@
 .btn-danger {
   background-color: var(--danger-500);
   border-color: var(--danger-600);
-  color: var(--on-danger);
-  box-shadow: var(--shadow-sm);
+  color: #ffffff;
 }
 
 .btn-danger:hover {
@@ -82,6 +85,7 @@
 .btn-ghost {
   background-color: transparent;
   color: var(--text-primary);
+  border-color: transparent;
 }
 
 .btn-ghost:hover {
@@ -89,9 +93,10 @@
   color: var(--text-primary);
 }
 
-/* 2. Form Inputs */
+/* ============================================================
+   2. FORM INPUTS
+   ============================================================ */
 .form-group {
-  margin-bottom: var(--spacing-4);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
@@ -117,6 +122,8 @@
   outline: none;
   transition: all var(--transition-fast);
   width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .form-control:focus {
@@ -148,16 +155,18 @@
   gap: var(--spacing-4);
 }
 
-/* 3. Cards */
+/* ============================================================
+   3. CARDS
+   ============================================================ */
 .card {
   background-color: var(--surface-bg);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-surface);
-  padding: var(--spacing-6);
+  padding: var(--spacing-5);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
+  gap: var(--spacing-4);
   position: relative;
 }
 
@@ -169,7 +178,7 @@
 }
 
 .card-title {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -181,7 +190,9 @@
   margin-top: 2px;
 }
 
-/* 4. Professional Data Tables */
+/* ============================================================
+   4. DATA TABLES — hidden on mobile, replaced by cards
+   ============================================================ */
 .table-container {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
@@ -195,44 +206,14 @@
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .table-scroll .data-table {
-    min-width: 640px;
-  }
-
-  .table-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .table-search-wrapper {
-    max-width: none;
-  }
-
-  .card-header {
-    flex-wrap: wrap;
-    gap: var(--spacing-3);
-    align-items: flex-start;
-  }
-
-  .drawer-footer {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-}
-
 .table-controls {
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-4);
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--surface-border);
   background-color: var(--surface-bg);
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
   flex-wrap: wrap;
 }
 
@@ -256,8 +237,8 @@
 }
 
 .table-search-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .table-filters {
@@ -273,7 +254,7 @@
 
 .data-table th {
   background-color: var(--surface-bg);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-5);
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-secondary);
@@ -284,7 +265,7 @@
 }
 
 .data-table td {
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-5);
   font-size: var(--text-sm);
   color: var(--text-primary);
   border-bottom: 1px solid var(--surface-border);
@@ -303,17 +284,121 @@
   border-bottom: none;
 }
 
-/* 5. Status Badges */
+/* ============================================================
+   MOBILE CARD LIST — replaces tables on small screens
+   ============================================================ */
+.mobile-card-list {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-data-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--surface-border);
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+}
+
+.mobile-data-card:last-child {
+  border-bottom: none;
+}
+
+.mobile-data-card:hover,
+.mobile-data-card:active {
+  background-color: var(--surface-hover);
+}
+
+.mobile-data-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.mobile-data-card__title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-data-card__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2) var(--spacing-4);
+}
+
+.mobile-data-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mobile-data-card__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mobile-data-card__value {
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.mobile-data-card__value--mono {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.mobile-data-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-1);
+  flex-wrap: wrap;
+}
+
+/* Employee avatar initials */
+.mobile-emp-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--interactive-soft);
+  color: var(--primary-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: var(--text-xs);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   5. STATUS BADGES
+   ============================================================ */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-1);
-  padding: 0.35rem 0.75rem;
+  padding: 0.25rem 0.65rem;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: var(--radius-full);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   border: 1px solid transparent;
   transition: all var(--transition-fast);
@@ -349,49 +434,58 @@
   border-color: var(--status-neutral-border);
 }
 
-/* 6. Step Indicators for Stepper Wizards */
+/* ============================================================
+   6. STEP WIZARD STEPPER
+   ============================================================ */
 .stepper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
   width: 100%;
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-5);
   background: var(--surface-bg);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-4);
   box-shadow: var(--shadow-sm);
   overflow-x: auto;
-  gap: var(--spacing-4);
+  gap: var(--spacing-2);
+  scrollbar-width: none;
+}
+
+.stepper::-webkit-scrollbar {
+  display: none;
 }
 
 .step-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: var(--spacing-2);
   position: relative;
   z-index: 10;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .step-circle {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: var(--radius-full);
   border: 2px solid var(--surface-sunken-border);
   background-color: var(--surface-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-xs);
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-secondary);
   transition: all var(--transition-normal);
+  flex-shrink: 0;
 }
 
 .step-label {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 500;
   color: var(--neutral-500);
   transition: color var(--transition-normal);
@@ -400,7 +494,7 @@
 .step-item.active .step-circle {
   border-color: var(--primary-600);
   background-color: var(--primary-600);
-  color: var(--on-primary);
+  color: #ffffff;
 }
 
 .step-item.active .step-label {
@@ -411,7 +505,7 @@
 .step-item.completed .step-circle {
   border-color: var(--success-500);
   background-color: var(--success-500);
-  color: var(--on-success);
+  color: #ffffff;
 }
 
 .step-item.completed .step-label {
@@ -422,46 +516,48 @@
   flex: 1;
   height: 2px;
   background-color: var(--surface-sunken-border);
-  margin: 0 var(--spacing-2);
+  margin: 0 var(--spacing-1);
+  min-width: 12px;
 }
 
 .step-connector.completed {
   background-color: var(--success-500);
 }
 
-/* 7. Empty State View */
+/* ============================================================
+   7. EMPTY STATE
+   ============================================================ */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: var(--spacing-12) var(--spacing-8);
+  padding: var(--spacing-10) var(--spacing-6);
   background-color: var(--surface-sunken);
   border: 1px dashed var(--surface-sunken-border);
   border-radius: var(--radius-lg);
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
 }
 
 .empty-state-icon {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border-radius: var(--radius-full);
   background-color: var(--surface-hover);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
 .empty-state-icon svg {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
 }
 
 .empty-state-title {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--text-on-surface-strong);
 }
@@ -469,20 +565,23 @@
 .empty-state-description {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  max-width: 320px;
-  line-height: 1.75;
+  max-width: 300px;
+  line-height: 1.7;
 }
 
-/* 8. Toasts Alert System */
+/* ============================================================
+   8. TOAST NOTIFICATIONS
+   ============================================================ */
 .toast-container {
   position: fixed;
-  bottom: var(--spacing-8);
-  right: var(--spacing-8);
+  bottom: var(--spacing-6);
+  right: var(--spacing-6);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
   z-index: 2000;
   pointer-events: none;
+  max-width: calc(100vw - 2 * var(--spacing-6));
 }
 
 .toast {
@@ -490,7 +589,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-5);
   background-color: var(--surface-bg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
@@ -498,8 +597,8 @@
   transform: translateY(100px);
   opacity: 0;
   animation: slideIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  min-width: 300px;
-  max-width: 450px;
+  min-width: 280px;
+  max-width: 420px;
   transition: opacity 200ms ease;
 }
 
@@ -524,12 +623,13 @@
 }
 
 .toast-icon svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .toast-content {
   flex: 1;
+  min-width: 0;
 }
 
 .toast-title {
@@ -542,6 +642,8 @@
   font-size: var(--text-xs);
   color: var(--text-secondary);
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .toast-close {
@@ -552,6 +654,7 @@
   padding: var(--spacing-1);
   border-radius: var(--radius-sm);
   transition: background-color var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .toast-close:hover {
@@ -564,35 +667,21 @@
   height: 16px;
 }
 
-.toast-success {
-  border-left: 4px solid var(--success-500);
-}
-.toast-success .toast-icon {
-  color: var(--success-500);
-}
+.toast-success { border-left: 3px solid var(--success-500); }
+.toast-success .toast-icon { color: var(--success-500); }
 
-.toast-error {
-  border-left: 4px solid var(--danger-500);
-}
-.toast-error .toast-icon {
-  color: var(--danger-500);
-}
+.toast-error { border-left: 3px solid var(--danger-500); }
+.toast-error .toast-icon { color: var(--danger-500); }
 
-.toast-warning {
-  border-left: 4px solid var(--warning-500);
-}
-.toast-warning .toast-icon {
-  color: var(--warning-500);
-}
+.toast-warning { border-left: 3px solid var(--warning-500); }
+.toast-warning .toast-icon { color: var(--warning-500); }
 
-.toast-info {
-  border-left: 4px solid var(--primary-500);
-}
-.toast-info .toast-icon {
-  color: var(--primary-500);
-}
+.toast-info { border-left: 3px solid var(--primary-500); }
+.toast-info .toast-icon { color: var(--primary-500); }
 
-/* 9. Loading Spinner */
+/* ============================================================
+   9. SPINNER
+   ============================================================ */
 .spinner {
   width: 24px;
   height: 24px;
@@ -603,9 +692,7 @@
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .loading-overlay {
@@ -622,7 +709,9 @@
   border-radius: inherit;
 }
 
-/* 10. Skeleton Loader */
+/* ============================================================
+   10. SKELETON LOADER
+   ============================================================ */
 .skeleton {
   background: var(--neutral-200);
   background: linear-gradient(
@@ -637,9 +726,7 @@
 }
 
 @keyframes shimmer {
-  to {
-    background-position-x: -200%;
-  }
+  to { background-position-x: -200%; }
 }
 
 .skeleton-text {
@@ -653,18 +740,95 @@
 }
 
 .skeleton-title {
-  height: 24px;
+  height: 22px;
   width: 60%;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .skeleton-card {
-  height: 120px;
+  height: 110px;
   width: 100%;
 }
 
 .skeleton-table-row {
-  height: 48px;
-  margin-bottom: 8px;
+  height: 44px;
+  margin-bottom: 6px;
   width: 100%;
+}
+
+/* ============================================================
+   RESPONSIVE — Components
+   ============================================================ */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Show mobile cards, hide desktop table */
+  .mobile-card-list {
+    display: flex;
+  }
+
+  .table-scroll {
+    display: none;
+  }
+
+  .table-controls {
+    padding: var(--spacing-3);
+    gap: var(--spacing-2);
+  }
+
+  .table-search-wrapper {
+    max-width: none;
+  }
+
+  .table-filters {
+    width: 100%;
+  }
+
+  .table-filters .form-control {
+    flex: 1;
+  }
+
+  .card {
+    padding: var(--spacing-4);
+    gap: var(--spacing-3);
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .stepper {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  /* On very narrow screens, hide step labels, show circles only */
+  .step-label {
+    display: none;
+  }
+
+  .step-item.active .step-label {
+    display: block;
+  }
+}
+
+@media (max-width: 430px) {
+  .toast-container {
+    bottom: var(--spacing-4);
+    right: var(--spacing-3);
+    left: var(--spacing-3);
+    max-width: none;
+  }
+
+  .toast {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  .empty-state {
+    padding: var(--spacing-8) var(--spacing-4);
+  }
 }

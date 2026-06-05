@@ -19,24 +19,28 @@
   <link rel="stylesheet" href="./src/styles/pages.css">
 
   <style>
-    /* Inline helper for responsive sidebar toggle on mobile viewports */
+    /* Mobile hamburger — hidden on desktop where sidebar is always visible */
     .mobile-menu-btn {
       display: none;
       background: none;
       border: none;
-      color: var(--neutral-600);
+      color: var(--ctrl-text);
       cursor: pointer;
-      padding: var(--spacing-2);
+      padding: var(--spacing-1);
       border-radius: var(--radius-md);
       transition: background-color var(--transition-fast);
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
     }
     .mobile-menu-btn:hover {
-      background-color: var(--neutral-100);
-      color: var(--neutral-800);
+      background-color: var(--ctrl-hover-bg);
     }
     @media (max-width: 1024px) {
       .mobile-menu-btn {
-        display: block;
+        display: flex;
       }
     }
   </style>
@@ -117,18 +121,19 @@
     <!-- Main Content Wrapper -->
     <div class="content-wrapper">
       
-      <!-- Sticky Glassmorphic Header -->
+      <!-- Sticky Glassmorphic Header — single-row, no-wrap layout -->
       <header class="header">
+        <!-- LEFT: hamburger (mobile only) + period pill -->
         <div class="header-left">
-          <!-- Mobile Menu trigger -->
           <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 20px; height: 20px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>
+          <!-- Period pill: always visible, no secondary row needed on mobile -->
+          <span class="badge-period" id="header-active-period">May 2026</span>
         </div>
 
+        <!-- RIGHT: dark mode toggle + profile avatar -->
         <div class="header-right">
-          <span class="badge-period" id="header-active-period">May 2026</span>
-
           <button class="icon-btn theme-toggle-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"></button>
 
           <div class="profile-action">

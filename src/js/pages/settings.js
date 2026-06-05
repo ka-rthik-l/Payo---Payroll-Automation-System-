@@ -42,7 +42,7 @@ export const settingsPage = {
           </div>
         </div>
 
-        <div class="card" style="padding: var(--spacing-8);">
+        <div class="card settings-card">
           <div class="settings-tab-container">
             <!-- Left Tabs List -->
             <div class="settings-tabs-list">
@@ -85,9 +85,9 @@ export const settingsPage = {
 
               <!-- Tab 2: Rules -->
               <div class="settings-tab-panel ${this.state.activeTab === 'rules' ? 'active' : ''}">
-                <h3 style="font-size:var(--text-base); font-weight:700; color:var(--neutral-900); margin-bottom:var(--spacing-4);">Payroll Calendar Configurations</h3>
+                <h3 class="settings-panel-title">Payroll Calendar Configurations</h3>
                 
-                <form id="settings-rules-form" style="display:flex; flex-direction:column; gap:var(--spacing-4); max-width:480px;">
+                <form id="settings-rules-form" class="settings-panel-form">
                   <div class="form-group">
                     <label class="form-label">Default Local Currency</label>
                     <select class="form-control" name="currency">
@@ -112,7 +112,7 @@ export const settingsPage = {
                       </select>
                     </div>
                   </div>
-                  <button class="btn btn-primary" type="submit" style="align-self:flex-start; margin-top:var(--spacing-2);">Save Calendar Rules</button>
+                  <button class="btn btn-primary" type="submit">Save Calendar Rules</button>
                 </form>
               </div>
             </div>

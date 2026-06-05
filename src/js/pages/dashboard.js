@@ -157,16 +157,16 @@ export const dashboardPage = {
                   <span class="badge badge-success">Completed</span>
                 </div>
                 
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-4); background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
-                  <div>
+                <div style="display:flex; flex-wrap:wrap; gap: var(--spacing-4); background-color: var(--neutral-50); padding: var(--spacing-4); border-radius: var(--radius-md); border: 1px solid var(--neutral-200);">
+                  <div style="flex:1; min-width:80px;">
                     <div style="font-size: 10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Gross Salary</div>
                     <div style="font-weight:700; color:var(--neutral-800); font-size:var(--text-sm); margin-top:2px;">${pdfService.formatCurrency(lastRun.totalGross, currency)}</div>
                   </div>
-                  <div>
+                  <div style="flex:1; min-width:80px;">
                     <div style="font-size: 10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Deductions</div>
                     <div style="font-weight:700; color:var(--neutral-800); font-size:var(--text-sm); margin-top:2px;">${pdfService.formatCurrency(lastRun.totalDeductions, currency)}</div>
                   </div>
-                  <div>
+                  <div style="flex:1; min-width:80px;">
                     <div style="font-size: 10px; font-weight:600; color:var(--neutral-400); text-transform:uppercase;">Net Salary</div>
                     <div style="font-weight:700; color:var(--primary-700); font-size:var(--text-sm); margin-top:2px;">${pdfService.formatCurrency(lastRun.totalNet, currency)}</div>
                   </div>
